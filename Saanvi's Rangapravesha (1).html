@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saanvi's Rangapravesha</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Elsie:wght@400;900&family=Poppins:wght@300;400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Samarkan font via CDN (hosted on GitHub raw / cdnjs workaround using @font-face) -->
+<style>
+@font-face {
+  font-family: 'Samarkan';
+  src: url('https://db.onlinewebfonts.com/t/e3e2e5dedede59d29b7b9c31038b8e25.woff2') format('woff2'),
+       url('https://db.onlinewebfonts.com/t/e3e2e5dedede59d29b7b9c31038b8e25.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database-compat.js"></script>
+
+<style>
+  :root {
+    --gold: #d4af37;
+    --gold-light: #f0d060;
+    --dark: #0f0505;
+    --card: #1e0e0e;
+    --card2: #2a1010;
+    --text: #f4e4bc;
+    --border: rgba(212,175,55,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--dark);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    padding-bottom: 90px;
+    text-align: center;
+    min-height: 100vh;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .title-rangapravesha {
+    font-family: 'Samarkan', 'Cinzel', serif;
+    font-size: clamp(2.2rem, 8vw, 3.8rem);
+    color: var(--gold);
+    margin: 24px 0 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    line-height: 1.1;
+    text-shadow: 0 0 30px rgba(212,175,55,0.4);
+  }
+
+  .title-name {
+    font-family: 'Elsie', serif;
+    font-size: clamp(2rem, 7vw, 2.8rem);
+    color: #fff;
+    margin: 6px 0 4px 0;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  .title-guru {
+    font-size: 0.82rem;
+    color: var(--text);
+    margin-bottom: 24px;
+    opacity: 0.75;
+    letter-spacing: 1.5px;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+
+  /* ── DECORATIVE DIVIDER ── */
+  .gold-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px auto 20px;
+    width: 80%;
+    max-width: 320px;
+  }
+  .gold-divider::before,
+  .gold-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .gold-divider span {
+    color: var(--gold);
+    font-size: 1rem;
+  }
+
+  /* ── PHOTO GRID ── */
+  .photo-square-container {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 92vw;
+    height: 92vw;
+    max-width: 440px;
+    max-height: 440px;
+    margin: 0 auto;
+    gap: 6px;
+    border: 2px solid var(--gold);
+    padding: 6px;
+    background: #000;
+    box-shadow: 0 0 40px rgba(212,175,55,0.2);
+  }
+  .photo-large, .photo-small { overflow: hidden; }
+  .photo-large { flex: 2; height: 100%; }
+  .photo-stack { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .photo-small { height: 50%; }
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ── LIVE BUTTON ── */
+  .live-btn {
+    margin: 28px auto 0;
+    padding: 16px 30px;
+    border: 1px solid var(--gold);
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-block;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--gold);
+    background: transparent;
+    transition: background 0.3s, color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .live-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(212,175,55,0.15);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+  }
+  .live-btn:hover::before { width: 300px; height: 300px; }
+  .live-btn:active { background: rgba(212,175,55,0.2); }
+
+  /* ── PAGES ── */
+  .page { display: none; padding: 20px; max-width: 600px; margin: 0 auto; }
+  .active-page { display: block; }
+
+  /* ── PAGE HEADERS ── */
+  .page-header {
+    font-family: 'Samarkan', 'Cinzel', serif;
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 20px 0 6px;
+    text-shadow: 0 0 20px rgba(212,175,55,0.3);
+  }
+
+  /* ── GLOSSARY / MARGAM ── */
+  .song-number {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: var(--gold);
+    opacity: 0.7;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    margin-top: 28px;
+    text-transform: uppercase;
+  }
+
+  .glossary-item { margin-bottom: 6px; }
+
+  .song-btn {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    padding: 16px 18px;
+    text-align: left;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.3s, background 0.3s;
+    letter-spacing: 0.5px;
+  }
+  .song-btn:hover { border-color: var(--gold); background: var(--card2); }
+  .song-btn.open { border-radius: 8px 8px 0 0; border-color: var(--gold); }
+
+  .song-chevron {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    color: var(--gold);
+  }
+  .song-btn.open .song-chevron .plus { display: none; }
+  .song-btn:not(.open) .song-chevron .minus { display: none; }
+  .song-chevron .minus {
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  .song-content {
+    display: none;
+    border-radius: 0 0 8px 8px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #fff;
+    min-height: 180px;
+    border: 1px solid var(--gold);
+    border-top: none;
+  }
+  .song-content::before {
+    content: "";
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(10,3,3,0.82));
+    z-index: 1;
+    border-radius: 0 0 8px 8px;
+  }
+  .song-text-inner {
+    position: relative;
+    z-index: 2;
+    padding: 22px 20px;
+    line-height: 1.75;
+    text-align: left;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: #f0e8d0;
+  }
+  .song-meta {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  .song-close-btn {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 20px 16px 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .song-close-btn button {
+    background: rgba(212,175,55,0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    font-weight: 300;
+  }
+  .song-close-btn button:hover { background: rgba(212,175,55,0.3); }
+
+  /* ── TEAM PAGE ── */
+  .team-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    opacity: 0.8;
+  }
+  .team-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+  .team-role {
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 400;
+    opacity: 0.8;
+  }
+  .team-name {
+    font-family: 'Elsie', serif;
+    font-size: 1rem;
+    color: var(--text);
+    margin-top: 2px;
+  }
+  .team-icon { font-size: 1.4rem; opacity: 0.6; }
+
+  /* ── LIVE PAGE ── */
+  .live-display {
+    background: var(--card);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 40px 20px;
+    margin: 30px 0;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .live-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #e53;
+    animation: pulse 1.5s infinite;
+    display: inline-block;
+    margin-right: 8px;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .live-label {
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    color: #e53;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  #display-text {
+    font-family: 'Elsie', serif;
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    color: #fff;
+    line-height: 1.5;
+  }
+
+  /* ── JOURNEY PAGE ── */
+  .journey-block {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .journey-block img {
+    border-radius: 8px;
+    margin-bottom: 14px;
+    object-fit: cover;
+    height: 220px;
+  }
+  .journey-block p { font-size: 0.9rem; line-height: 1.7; opacity: 0.85; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; bottom: 0; width: 100%;
+    background: var(--card);
+    display: flex;
+    border-top: 1px solid var(--border);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+  }
+  nav button {
+    background: none; border: none;
+    color: #666;
+    padding: 14px 0;
+    width: 25%;
+    font-size: 8.5px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    border-top: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-family: 'Poppins', sans-serif;
+  }
+  nav button .nav-icon { font-size: 1.1rem; display: block; margin-bottom: 2px; line-height: 1; }
+  nav button .nav-icon svg { width: 18px; height: 18px; fill: currentColor; }
+  nav button.active-tab { color: var(--gold); border-top: 2px solid var(--gold); }
+
+  /* ── HOME PAGE EXTRA BUTTONS ── */
+  .home-accordion-item { margin-top: 18px; text-align: left; }
+  .home-acc-btn {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    padding: 16px 18px;
+    text-align: left;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.3s, background 0.3s;
+    letter-spacing: 0.5px;
+  }
+  .home-acc-btn:hover { border-color: var(--gold); background: var(--card2); }
+  .home-acc-btn.open { border-radius: 8px 8px 0 0; border-color: var(--gold); }
+  .home-acc-btn .acc-chevron {
+    font-size: 1.1rem;
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .home-acc-btn.open .acc-chevron .plus { display: none; }
+  .home-acc-btn:not(.open) .acc-chevron .minus { display: none; }
+
+  .home-acc-content {
+    display: none;
+    border-radius: 0 0 8px 8px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #fff;
+    min-height: 160px;
+    border: 1px solid var(--gold);
+    border-top: none;
+  }
+  .home-acc-content::before {
+    content: "";
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(10,3,3,0.85));
+    z-index: 1;
+    border-radius: 0 0 8px 8px;
+  }
+  .home-acc-inner {
+    position: relative;
+    z-index: 2;
+    padding: 22px 20px;
+    line-height: 1.75;
+    text-align: left;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: #f0e8d0;
+  }
+  .home-acc-inner h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--gold-light);
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .home-acc-inner p { margin-bottom: 10px; }
+
+  /* PDF links */
+  .pdf-link-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 20px;
+  }
+  .pdf-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.5px;
+    transition: border-color 0.2s;
+  }
+  .pdf-link:hover { border-color: var(--gold); color: var(--gold); }
+  .pdf-icon { font-size: 1.4rem; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HOME PAGE ══════════════ -->
+<div id="home" class="page active-page">
+  <h1 class="title-rangapravesha">Rangapravesha</h1>
+  <div class="gold-divider"><span>✦</span></div>
+  <p class="title-name">Kum. Saanvi Lalwani</p>
+  <p class="title-guru">Disciple of Dr. Raksha Kartik</p>
+
+  <div class="photo-square-container">
+    <div class="photo-large"><img src="YOUR_BIG_PHOTO_URL" alt="Saanvi"></div>
+    <div class="photo-stack">
+      <div class="photo-small"><img src="YOUR_TEACHER_PHOTO_URL" alt="Teacher"></div>
+      <div class="photo-small"><img src="YOUR_FAMILY_PHOTO_URL" alt="Family"></div>
+    </div>
+  </div>
+
+  <div class="live-btn" onclick="showPage('live', 'btn-live')" style="margin-top:24px;">
+    <span class="live-dot"></span> CHECK FOR LIVE UPDATES
+  </div>
+
+  <!-- What is an Arangetram -->
+  <div class="home-accordion-item">
+    <button class="home-acc-btn" onclick="toggleHomeAcc('arangetram', this)">
+      What is an Arangetram?
+      <span class="acc-chevron">
+        <span class="plus">+</span>
+        <span class="minus">&minus;</span>
+      </span>
+    </button>
+    <div id="arangetram" class="home-acc-content" style="background-image: url('YOUR_ARANGETRAM_BG_URL');">
+      <div class="home-acc-inner">
+        <h3>The Debut Recital</h3>
+        <p>An Arangetram — from the Tamil words <em>arangam</em> (stage) and <em>etram</em> (ascending) — is the formal debut recital of a Bharatanatyam dancer. It is the moment a student ascends the stage for the very first time as a solo artist, presenting a complete Margam before an audience, after years of rigorous training under a Guru.</p>
+        <p>More than a performance, the Arangetram is a rite of passage — a sacred ceremony that marks the transition from student to artist. It is an act of deep gratitude: to the Guru who shaped every mudra and footstep, to the parents who supported the journey, to the art form that has been passed down through generations, and to the divine who animates it all.</p>
+        <p>The tradition of the Arangetram is ancient, rooted in the Devadasi tradition of temple dance, where a dancer's debut was offered as a gift to the presiding deity. Today, it continues as one of the most significant milestones in the life of a classical dancer — a lifelong memory of the first time the stage became home.</p>
+        <p>Saanvi has trained for over eight years under the guidance of Dr. Raksha Kartik, and today she offers this recital with devotion, humility, and joy.</p>
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- Brochure & Invite PDFs -->
+  <div class="home-accordion-item">
+    <button class="home-acc-btn" onclick="toggleHomeAcc('pdfs', this)">
+      Brochure &amp; Invitation
+      <span class="acc-chevron">
+        <span class="plus">+</span>
+        <span class="minus">&minus;</span>
+      </span>
+    </button>
+    <div id="pdfs" class="home-acc-content" style="min-height:unset; background: var(--card);">
+      <div class="pdf-link-row">
+        <a href="YOUR_BROCHURE_PDF_URL" target="_blank" class="pdf-link">
+          <span class="pdf-icon">📄</span>
+          <span>Event Brochure</span>
+        </a>
+        <a href="YOUR_INVITE_PDF_URL" target="_blank" class="pdf-link">
+          <span class="pdf-icon">📄</span>
+          <span>Invitation</span>
+        </a>
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ GLOSSARY / MARGAM PAGE ══════════════ -->
+<div id="glossary" class="page">
+  <h2 class="page-header">The Margam</h2>
+  <div class="gold-divider"><span>✦</span></div>
+
+  <!-- 1 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s1', this)">
+      1. Pushpanjali &amp; Shloka
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s1" class="song-content" style="background-image: url('YOUR_BG_1_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Opening Invocation · Ragam: Nattai · Talam: Adi · Composer: Rajarathnam Pillai</div>
+        Pushpanjali, meaning "offering of flowers," is the traditional opening piece of the Bharatanatyam Margam. Through this sacred invocation, the dancer offers flowers with devotion to Lord Nataraja and seeks the blessings of Bhoomi Devi for strength, grace, and humility. She also respectfully seeks the blessings of her Guru, parents, the orchestra, and the audience, whose presence and encouragement complete the artistic journey.<br><br>
+        The dancer further invokes the blessings of Lord Narayana through an excerpt from the Narayana Upanishad, proclaiming his omnipresence: <em>Narayana is eternal. Brahma is Narayana. Shiva is Narayana. Time is Narayana. Space and all directions are Narayana. That which is within and without is Narayana. All that has existed and all that will exist is Narayana — alone, eternal, indivisible, immaculate, pure, and divine.</em>
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s2', this)">
+      2. Gaiye Ganapathi
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s2" class="song-content" style="background-image: url('YOUR_BG_2_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Devotional Piece · Raga: Hamsadhwani · Talam: Adi · Composer: Tulsidas</div>
+        This devotional hymn praises Lord Ganesha as the remover of obstacles and the giver of wisdom and prosperity — the beloved son of Lord Shiva and Goddess Parvati, the elephant-faced Vinayaka, an ocean of mercy and knowledge, and the bestower of intelligence, joy, and auspiciousness.<br><br>
+        During the passage <em>"Siddhi Sadhana Gajavadana Vinayaka,"</em> the dancer enacts the story of Ganesha's origin: Goddess Parvati creates a boy to guard her chamber. When Lord Shiva attempts to enter, the boy — unaware of Shiva's identity — refuses him. Enraged, Shiva severs the boy's head. Learning the child is Parvati's son, Shiva is filled with remorse and sends his attendants to bring the head of the first living being found facing east. They return with an elephant's head, which Shiva places upon the boy, restoring him to life. Thus the child becomes Gajavadana, the elephant-faced Lord Ganesha.<br><br>
+        Through this piece, the poet Tulsidas offers prayers and salutations to Ganesha, seeking his blessings before beginning the journey of devotion and art.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s3', this)">
+      3. Nada Tanumanisham
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s3" class="song-content" style="background-image: url('YOUR_BG_3_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Invocation · Ragam: Chittaranjani · Talam: Adi · Composer: Saint Thyagaraja</div>
+        Saint Thyagaraja praises Lord Shiva as the embodiment of Nada — the cosmic principle of sound and music. According to tradition, the primordial sounds of creation emerged from the vibrations of Shiva's damaru (hourglass drum). It is believed that Shiva played the damaru fourteen times, producing the sacred Maheshwara Sutras — the foundation of language, rhythm, and sound.<br><br>
+        Thyagaraja offers salutations to Lord Shankara as the essence of the Sama Veda. The seven musical notes are believed to emerge from Shiva's five divine faces. Ancient sages associated the swaras with animals and birds: <em>Sa</em> (peacock), <em>Ri</em> (bull), <em>Ga</em> (goat), <em>Ma</em> (crane), <em>Pa</em> (cuckoo), <em>Dha</em> (horse), <em>Ni</em> (elephant).<br><br>
+        Shiva's five faces correspond to the five elements — Sadyojata (Earth, sacred white), Vamadeva (Water, deep red), Aghora (Fire, dark as night), Tatpurusha (Air, golden-orange), and Ishana (Ether, luminous crystal) — through which he becomes the source of melody, rhythm, language, and existence itself. Thyagaraja further portrays Shiva as a lover of music, the conqueror of death, and the compassionate protector of sincere devotees.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s4', this)">
+      4. Tumaka Chalata
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s4" class="song-content" style="background-image: url('YOUR_BG_4_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Bhajan · Raaga: Mishra Peelu · Taala: Tishra Ekam · Composer: Sant Tulsidas</div>
+        <em>Tumak Chalat Ramachandra</em> is a celebrated bhajan that lovingly portrays the enchanting childhood of Rama. Filled with <em>vatsalya bhava</em> — the tender affection of a mother towards her child — the composition vividly describes little Rama toddling through Ayodhya with tiny, playful steps, His anklets ringing melodiously as He walks.<br><br>
+        The presentation begins with a <em>sanchari</em> inspired by a well-known incident from the life of Tulsidas. One day, while preparing sandalwood paste for worship, a radiant young child appeared before him and asked for a sandalwood <em>tilaka</em>. Captivated by the extraordinary beauty and divinity of the child, Tulsidas stood spellbound. Smiling gently, the child took the sandalwood paste, applied a <em>tilaka</em> upon His own forehead, and lovingly placed one upon Tulsidas before disappearing. In that moment, Tulsidas realized that the child was none other than Lord Rama Himself.<br><br>
+        Overwhelmed by this divine vision, Tulsidas imagined the playful and innocent form of Baala Rama delighting the people of Ayodhya, giving rise to this beautiful composition.<br><br>
+        <div class="song-meta" style="margin-top:10px;">Meaning of the Sahityam</div>
+        <strong>"ṭhumaka calata rāmacandra bājata paijaniyām̐"</strong><br>
+        Little Rama walks with adorable, unsteady baby steps while His anklets jingle sweetly with every movement.<br><br>
+        <strong>"kilaki kilaki uṭhata dhāya girata bhūmi laṭapaṭāya"</strong><br>
+        Laughing gleefully, Rama runs about joyfully and tumbles upon the ground in playful innocence.<br><br>
+        <strong>"dhāya māta gōda lēta daśaratha kī raniyām̐"</strong><br>
+        Seeing Him fall, the queens of King Dasharatha rush towards Him with concern and lovingly lift Him into their arms.<br><br>
+        <strong>"añcala raja aṅga jhāri vividha bhānti sō dulāri"</strong><br>
+        Mother Kausalya gently wipes the dust from Rama's tiny body with the edge of her sari, tending lovingly to Him as though soothing the little bruises from His fall. She comforts and pampers Him with endless motherly affection.<br><br>
+        <strong>"tana mana dhana vāri vāri kahata mr̥du bacaniyām̐"</strong><br>
+        To Kausalya, Rama is her entire world — her body, mind, and wealth. She repeatedly showers Him with love while speaking soft and tender words to Him.<br><br>
+        <strong>"vidruma sē aruṇa adhara bōlata mukha madhura madhura"</strong><br>
+        Rama's lips are compared to red coral and glow like the rising sun, while His sweet baby words melt every heart around Him.<br><br>
+        <strong>"subhaga nāsikā mēm̐ cāru laṭakata laṭakaniyām̐"</strong><br>
+        The child Rama is fascinated by the beautiful nose ornament worn by Mother Kausalya and playfully reaches out toward the gently swinging jewel.<br><br>
+        <strong>"tulasīdāsa ati ānanda dēkhakē mukhāravinda"</strong><br>
+        Tulsidas experiences immeasurable bliss upon beholding Rama's lotus-like face.<br><br>
+        <strong>"raghuvara chabi kē samāna raghuvara chabi baniyām̐"</strong><br>
+        The poet concludes that nothing in all creation can compare to the divine beauty and radiance of Lord Rama.<br><br>
+        This bhajan beautifully blends devotion, innocence, and maternal affection, allowing devotees to experience the sweetness of Baala Rama through the loving imagination of Sant Tulsidas.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s5', this)">
+      5. Maathe Malayadwaja
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s5" class="song-content" style="background-image: url('YOUR_BG_5_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Daru Varna · Raga: Kamas · Tala: Adi · Composer: Muthiah Bhagavathar</div>
+        This Daru Varna is dedicated to Meenakshi, an incarnation of Shakti, and showcases her multifaceted nature. She is praised as the daughter of King Malayadhvaja Pandya, and honoured as the mother of Lord Ganesha and Lord Subramanya. The dancer depicts the birth stories of both divine sons.<br><br>
+        The composition flows between depictions of her serene and powerful forms. Meenakshi is described as "Shankari" (the peaceful one), "Chandrakaladhari" (the moon-crowned one), and "Shatodari" (symbolising fertility and abundance). She also takes the fierce form of Chamundeshwari — slayer of Mahishasura, who with a boon from Brahma could not be defeated by any male warrior. The dancer enacts the battle between goddess and demon, culminating in the triumph of feminine divine power.<br><br>
+        In the second half, the composer shifts to a prayer for the protection of the Mysore king Nalvadi Krishna Raja Wodeyar, calling upon Meenakshi as Jaganmata to safeguard his reign. Through this Varna, Bhagavathar captures the dynamic duality of the goddess — creator and destroyer, mother and warrior, the supreme balance of gentleness and strength.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s6', this)">
+      6. Pavadisu Paramathma
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s6" class="song-content" style="background-image: url('YOUR_BG_6_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Devotional Composition · Raga: Ragamalika · Tala: Adi Tala · Composer: Purandara Dasa</div>
+        <div class="song-meta" style="margin-top:10px; margin-bottom:14px;">Story</div>
+        This composition begins with a beautiful narrative woven into it by Acharya Dr. Raksha. It tells the story of Hathiram Baba, a devoted follower of Lord Vishnu who travelled all the way from Ayodhya to Tirumala and made it his home. His love and devotion towards Lord Venkateshwara were so profound that it is said that every night, Lord Srinivasa Himself would come to Baba's ashram and spend time playing dice with him before returning to the temple.<br><br>
+        One night, while leaving for the temple, Lord Venkatesha accidentally left behind His sacred necklace in Hathiram Baba's ashram. The next morning, when Baba found it, he immediately carried it to the temple authorities with the intention of returning it. However, instead of believing him, they accused him of stealing the necklace and imprisoned him.<br><br>
+        Despite Hathiram Baba repeatedly explaining that the necklace had fallen there when Lord Srinivasa had visited him, no one believed his words. As a test, he was locked in a huge room filled with sugarcane and told that if all of it disappeared by morning, he would be declared innocent and released; otherwise, he would face severe punishment. Overwhelmed and unsure of what to do, Baba prayed sincerely to Lord Srinivasa. Moved by the devotion of His beloved devotee, Lord Venkateshwara appeared in the form of a majestic elephant and consumed all the sugarcane, thus protecting Hathiram Baba and proving his innocence.<br><br>
+        <div class="song-meta" style="margin-top:10px; margin-bottom:14px;">Song Meaning</div>
+        <em>Pavadisu Paramatmane</em> — meaning "O Supreme Lord, please recline and rest" — is a deeply devotional composition that lovingly invites the Lord to rest in a beautifully prepared divine chamber adorned with precious jewels, fragrant flowers, glowing lamps, and soft cushions. Through vivid imagery and tender expressions of devotion, the devotee offers heartfelt service to the Lord with reverence, affection, and surrender.<br><br>
+        The composition praises the Lord as the healer of worldly suffering, the protector and treasure of His devotees, and the compassionate Supreme Being who always safeguards those who place their faith in Him. Through the story of Hathiram Baba woven into this presentation, the boundless grace of Lord Venkateshwara and His unwavering love for His true devotees are beautifully portrayed.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s7', this)">
+      7. Andal
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s7" class="song-content" style="background-image: url('YOUR_BG_7_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Description to be added</div>
+        Details for this piece will be shared soon. Andal, the beloved Tamil poet-saint, offered her profound devotion to Lord Vishnu through her verses — her story is one of the most tender and transformative in all of Bhakti tradition.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s8', this)">
+      8. Kalinga Narthana Thillana
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s8" class="song-content" style="background-image: url('YOUR_BG_8_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Thillana · Raga: Naatai · Tala: Adi · Composer: Oothukadu Venkata Subba Iyyer</div>
+        The Thillana is the grand finale of a Bharatanatyam margam — a jubilant nritta piece of fast-paced movements that celebrate pure rhythm and energy. "Kalinga Narthana" means "the dance on Kalinga" — referring to the celebrated story of young Krishna dancing on the poisonous serpent Kalinga to purify the Yamuna river.<br><br>
+        Oothukadu Venkata Kavi sings of Krishna's lotus feet, eyes as delicate as petals, and radiant blue form — comparing his dance to a strike of lightning on the mighty serpent. Krishna is adorned with a tilaka, beautiful curly locks, a garland of forest flowers, and plays a flute whose melodies enchant all the worlds. He brings joy to the people of Vraj, conquers demons, and blesses the sages.<br><br>
+        The composer even shaped the melody so that at one moment, a particular word mimics the hissing of the great serpent. Through gati-bhedam — the intermingling of rhythmic syllables and lyrics — the composition creates a dramatic, cadenced portrait of the dancing Lord.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="glossary-item">
+    <button class="song-btn" onclick="toggleSong('s9', this)">
+      9. Garuda Gamana Mangalam
+      <span class="song-chevron"><span class="plus">+</span><span class="minus">&minus;</span></span>
+    </button>
+    <div id="s9" class="song-content" style="background-image: url('YOUR_BG_9_URL');">
+      <div class="song-text-inner">
+        <div class="song-meta">Closing Mangalam · Description to be added</div>
+        The Mangalam is the auspicious closing piece of the margam, offered as a benediction and thanksgiving to the divine, the guru, and the audience. Garuda Gamana — "one who rides Garuda" — is a name of Lord Vishnu, and this piece invokes his blessings to conclude the performance with grace and gratitude.
+      </div>
+      <div class="song-close-btn">      </div>
+      <div class="song-close-btn"><button onclick="closeSong(this)" title="Close">&minus;</button></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ JOURNEY PAGE ══════════════ -->
+<div id="journey" class="page">
+  <h2 class="page-header">The Journey</h2>
+  <div class="gold-divider"><span>✦</span></div>
+  <div class="journey-block">
+    <img src="YOUR_CHILDHOOD_PHOTO_URL" style="width:100%;">
+    <p>This journey began in 2016 at [Dance School Name]... (Your story goes here.)</p>
+  </div>
+</div>
+
+<!-- ══════════════ LIVE PAGE ══════════════ -->
+<div id="live" class="page">
+  <h2 class="page-header">Live</h2>
+  <div class="gold-divider"><span>✦</span></div>
+
+  <div class="live-display">
+    <div class="live-label"><span class="live-dot"></span> Now on stage</div>
+    <div id="display-text">Welcome</div>
+  </div>
+
+  <p style="font-size: 0.78rem; opacity: 0.5; letter-spacing: 1px;">
+    UPDATES APPEAR HERE IN REAL TIME DURING THE PERFORMANCE
+  </p>
+</div>
+
+<!-- ══════════════ TEAM PAGE ══════════════ -->
+<div id="team" class="page">
+  <h2 class="page-header">The Team</h2>
+  <div class="gold-divider"><span>✦</span></div>
+
+  <p class="team-section-title">Ensemble</p>
+
+  <div class="team-card">
+    <div>
+      <div class="team-role">Nattuvangam</div>
+      <div class="team-name">Vidushi Dr. Raksha Karthik</div>
+    </div>
+    <span class="team-icon">🥁</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Vocal</div>
+      <div class="team-name">Vidwan Shri Balasubramanya Sharma</div>
+    </div>
+    <span class="team-icon">🎤</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Mridangam</div>
+      <div class="team-name">Vidwan Bhavani Shankar</div>
+    </div>
+    <span class="team-icon">🥁</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Flute</div>
+      <div class="team-name">Vidwan Deepak Hebbal</div>
+    </div>
+    <span class="team-icon">🎵</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Veena</div>
+      <div class="team-name">Vidwan Gopal Venkataramana</div>
+    </div>
+    <span class="team-icon">🎵</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Rhythm Pad</div>
+      <div class="team-name">Vidwan D. V. Prasanna Kumar</div>
+    </div>
+    <span class="team-icon">🎵</span>
+  </div>
+
+  <p class="team-section-title">Credits</p>
+
+  <div class="team-card">
+    <div>
+      <div class="team-role">Event Design</div>
+      <div class="team-name">Shri Karthik Kittu</div>
+    </div>
+    <span class="team-icon">✨</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Makeup</div>
+      <div class="team-name">Shri Vimal Kanakaraj</div>
+    </div>
+    <span class="team-icon">💄</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Costume</div>
+      <div class="team-name">Shri Armugam</div>
+    </div>
+    <span class="team-icon">🪡</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Lighting</div>
+      <div class="team-name">Shri 'Belaku' Nagaraj Marihonnaiah</div>
+    </div>
+    <span class="team-icon">💡</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Invitation Design</div>
+      <div class="team-name">Shri Manoj H P</div>
+    </div>
+    <span class="team-icon">📜</span>
+  </div>
+  <div class="team-card">
+    <div>
+      <div class="team-role">Photography &amp; Videography</div>
+      <div class="team-name">Shri Madhukar · Universal Rasikas</div>
+    </div>
+    <span class="team-icon">📸</span>
+  </div>
+</div>
+
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<nav>
+  <button id="btn-home" class="active-tab" onclick="showPage('home', 'btn-home')">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>HOME
+  </button>
+  <button id="btn-live" onclick="showPage('live', 'btn-live')">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></span>LIVE
+  </button>
+  <button id="btn-glossary" onclick="showPage('glossary', 'btn-glossary')">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 14H8v-2h8v2zm0-4H8v-2h8v2zm0-4H8V6h8v2z"/></svg></span>MARGAM
+  </button>
+  <button id="btn-team" onclick="showPage('team', 'btn-team')">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></span>TEAM
+  </button>
+</nav>
+
+<script>
+  // Firebase
+  const firebaseConfig = {
+    databaseURL: "https://my-arangetram-default-rtdb.asia-southeast1.firebasedatabase.app/"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // Page navigation
+  function showPage(pageId, btnId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+    document.getElementById(pageId).classList.add('active-page');
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+    document.getElementById(btnId).classList.add('active-tab');
+    window.scrollTo(0, 0);
+  }
+
+  // Close button inside expanded song
+  function closeSong(btn) {
+    const content = btn.closest('.song-content');
+    if (content) {
+      content.style.display = "none";
+      const item = content.closest('.glossary-item');
+      if (item) item.querySelector('.song-btn').classList.remove('open');
+    }
+    const homeContent = btn.closest('.home-acc-content');
+    if (homeContent) {
+      homeContent.style.display = "none";
+      const item = homeContent.closest('.home-accordion-item');
+      if (item) item.querySelector('.home-acc-btn').classList.remove('open');
+    }
+  }
+
+  // Home page accordion
+  function toggleHomeAcc(id, btn) {
+    const content = document.getElementById(id);
+    const isVisible = content.style.display === "block";
+    content.style.display = isVisible ? "none" : "block";
+    btn.classList.toggle('open', !isVisible);
+  }
+
+  // Song accordion
+  function toggleSong(id, btn) {
+    const content = document.getElementById(id);
+    const isVisible = content.style.display === "block";
+
+    // Close all
+    document.querySelectorAll('.song-content').forEach(c => c.style.display = "none");
+    document.querySelectorAll('.song-btn').forEach(b => b.classList.remove('open'));
+
+    // Toggle clicked
+    if (!isVisible) {
+      content.style.display = "block";
+      btn.classList.add('open');
+    }
+  }
+
+  // Firebase live text
+  db.ref('current_sentence').on('value', (snap) => {
+    document.getElementById('display-text').innerText = snap.val() || "Welcome";
+  });
+</script>
+</body>
+</html>
