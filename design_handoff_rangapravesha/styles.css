@@ -499,3 +499,111 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+/* ============================================================
+   Mobile-first refinements (≤ 600px)
+   ============================================================ */
+@media (max-width: 600px) {
+
+  /* Tighter side padding */
+  .container { padding: 0 18px; }
+
+  /* Slightly smaller base font */
+  body { font-size: 16px; }
+
+  /* ── Nav ── */
+  /* Hide "SAANVI LALWANI" label if screen is very tight */
+  .brand small { display: none; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: clamp(40px, 10vw, 64px) 0 clamp(36px, 8vw, 56px);
+  }
+
+  /* Stack date + venue vertically, drop separator */
+  .hero-meta {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .hero-meta .sep { display: none; }
+
+  /* Stack CTA buttons full-width */
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .hero-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Smaller portrait heights on mobile */
+  .hero-gallery { gap: 10px; margin-top: 32px; }
+  .hero-gallery .g-tall  { height: 210px; }
+  .hero-gallery .g-short { height: 150px; }
+
+  /* ── Sections ── */
+  .section { padding: clamp(48px, 10vw, 72px) 0; }
+  .section-head { margin-bottom: clamp(24px, 6vw, 40px); }
+  .section-lead { font-size: 18px; }
+
+  /* ── Accordion ── */
+  .acc-head { gap: 10px; padding: 18px 0; }
+  .acc-num  { font-size: 24px; min-width: 1.4em; }
+  .acc-title .t    { font-size: 20px; }
+  .acc-title .meta { font-size: 13px; }
+  .acc-icon { width: 28px; height: 28px; }
+  .acc-icon svg { width: 13px; height: 13px; }
+  .acc-body-inner { padding: 0 0 24px 2px; font-size: 15px; }
+  .sahitya .line  { font-size: 15px; }
+  .sahitya .gloss { font-size: 14px; }
+
+  /* ── Journey ── */
+  .journey-text p { font-size: 17px; }
+  .journey-text .drop::first-letter {
+    font-size: 56px; line-height: .76; padding: 6px 10px 0 0;
+  }
+  .journey-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .journey-stats .st { text-align: center; }
+  .journey-stats .st .n { font-size: 36px; }
+  .journey-stats .st .l { font-size: 10px; letter-spacing: .1em; }
+
+  /* ── Live ── */
+  .live-card { padding: clamp(24px, 6vw, 36px) clamp(18px, 5vw, 28px); }
+  .live-title { font-size: clamp(26px, 7vw, 40px); }
+  .live-meta  { font-size: 17px; }
+  .live-progress { gap: 4px; }
+  .live-progress span { width: 16px; }
+
+  /* ── Team ── */
+  .team-card { padding: 18px; }
+  .team-card .name { font-size: 20px; }
+  .credits-grid { grid-template-columns: 1fr 1fr; }
+
+  /* ── Footer ── */
+  .footer .om { font-size: 17px; }
+
+  /* ── Doc cards ── */
+  .doc-card { padding: 16px 18px; gap: 14px; }
+  .doc-card .t { font-size: 19px; }
+}
+
+/* ── Extra small (≤ 380px) ── */
+@media (max-width: 380px) {
+  .container { padding: 0 14px; }
+  .hero-gallery .g-tall  { height: 180px; }
+  .hero-gallery .g-short { height: 130px; }
+  .credits-grid { grid-template-columns: 1fr; }
+  .hero-cta .btn { font-size: 13px; padding: 12px 20px; }
+}
