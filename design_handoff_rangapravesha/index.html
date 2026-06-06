@@ -480,7 +480,16 @@ section { position: relative; }
 }
 .footer .deva        { font-family: var(--font-deva); color: var(--c-hero-gold); font-size: clamp(22px, 4vw, 34px); }
 .footer .om          { font-style: italic; font-family: var(--font-display); font-size: 20px; opacity: .8; margin-top: 14px; }
-.footer .credit-line { font-size: 13px; color: var(--c-hero-gold); opacity: .6; margin-top: 26px; letter-spacing: .04em; }
+.footer .footer-title {
+  font-family: var(--font-display); font-size: clamp(28px, 4.5vw, 48px);
+  color: var(--c-hero-gold); font-weight: 600; letter-spacing: .06em;
+  margin-top: 32px; line-height: 1.15;
+}
+.footer .footer-sub {
+  font-family: var(--font-label); font-size: clamp(12px, 1.8vw, 15px);
+  color: var(--c-hero-gold); opacity: .65; letter-spacing: .2em;
+  text-transform: uppercase; margin-top: 10px;
+}
 
 /* ── Scroll reveal ── */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
@@ -773,7 +782,8 @@ NrityakalaMandiram. She also teaches dance to the visually and audio/speech impa
   <div class="container">
     <div class="deva">शुभमस्तु</div>
     <p class="om">With gratitude — to the Guru, the parents, the divine, and to you, our cherished guests.</p>
-    <p class="credit-line">Saanvi's Rangapravesha · A Bharatanatyam Arangetram</p>
+    <div class="footer-title">Nruthyasammohana</div>
+    <div class="footer-sub">A Bharatanatyam Arangetram</div>
   </div>
 </footer>
 
