@@ -335,6 +335,38 @@ section { position: relative; }
 }
 .doc-card.nudge { animation: nudge .4s var(--ease); }
 
+/* ── Info Panels (Natanam / Arangetram / Docs) ── */
+.info-panels { display: flex; flex-direction: column; gap: 12px; }
+.info-panel {
+  border: 1px solid var(--c-line); border-radius: var(--r-md);
+  background: var(--c-surface); overflow: hidden;
+}
+.info-panel-head {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 28px; background: none; border: none; cursor: pointer;
+  text-align: left; gap: 16px;
+  font-family: var(--font-display); font-size: clamp(19px, 2.6vw, 24px);
+  color: var(--c-ink); font-weight: 600; line-height: 1.25;
+  transition: color .2s var(--ease), background .2s var(--ease);
+}
+.info-panel-head:hover { color: var(--c-maroon); background: rgba(182,134,44,.05); }
+.info-panel-head[aria-expanded="true"] { color: var(--c-maroon); }
+.info-panel-head .ip-icon {
+  flex-shrink: 0; width: 22px; height: 22px; color: var(--c-gold);
+  transition: transform .32s var(--ease);
+}
+.info-panel-head[aria-expanded="true"] .ip-icon { transform: rotate(45deg); }
+.info-panel-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .45s var(--ease);
+}
+.info-panel-body.open { max-height: 2000px; }
+.info-panel-inner { padding: 4px 28px 28px; }
+.info-panel-inner .read p { font-size: 18px; }
+.info-panel-static .info-panel-head { cursor: default; }
+.info-panel-static .info-panel-head:hover { background: none; color: var(--c-ink); }
+.info-panel-static .info-panel-inner { padding: 0 28px 28px; }
+
 /* ── Journey ── */
 .journey-wrap {
   display: grid; grid-template-columns: 0.9fr 1.1fr;
@@ -560,71 +592,87 @@ section { position: relative; }
   </div>
 </header>
 
-<!-- ══════════════════════════ NATANAM ══════════════════════════ -->
+<!-- ══════════════════════════ INFO PANELS ══════════════════════════ -->
 <section class="section alt" id="natanam">
   <div class="container">
-    <div class="section-head">
-      <p class="eyebrow">The Gurukulam</p>
-      <h2>Natanam Institute of Dance</h2>
-      <div class="divider">
-        <svg class="lotus" viewBox="0 0 60 40" fill="none" stroke="currentColor" stroke-width="1.3">
-          <path d="M30 34c0-10 0-16 0-22M30 34c-8-2-14-8-16-16 8 2 14 6 16 12M30 34c8-2 14-8 16-16-8 2-14 6-16 12M30 34c-4-3-7-9-7-16 4 4 6 9 7 14M30 34c4-3 7-9 7-16-4 4-6 9-7 14"/>
-        </svg>
-      </div>
-    </div>
-    <div class="read">
-      <p>Natanam was founded with a vision to serve people and educate them in all art forms. The Institute of Dance was founded and is led by <em>Dr Smt Raksha Karthik</em>. Our vision is to introduce the future generation to the ancient and beautiful dance form of Bharatanatyam, music and mythology.</p>
-      <p>The Institute is committed to the time-tested ancient tradition of teaching, practice and performance, simultaneously exploring interpretations of the dance form. Natanam Foundation for Arts has been acclaimed for its efforts and has been appreciated highly by many people and organisations, and has also been invited to perform at many events. Students from the Institute have garnered awards and appreciations at various competitions.</p>
-      <p>Natanam has also been accredited by the <em>International Dance Council — CID</em>, the official umbrella organisation for all forms of dance in all countries, and a part of UNESCO.</p>
-    </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════ ABOUT ══════════════════════════ -->
-<section class="section" id="about">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow">The Debut Recital</p>
-      <h2>What is an Arangetram?</h2>
-      <div class="divider">
-        <svg class="lotus" viewBox="0 0 60 40" fill="none" stroke="currentColor" stroke-width="1.3">
-          <path d="M30 34c0-10 0-16 0-22M30 34c-8-2-14-8-16-16 8 2 14 6 16 12M30 34c8-2 14-8 16-16-8 2-14 6-16 12M30 34c-4-3-7-9-7-16 4 4 6 9 7 14M30 34c4-3 7-9 7-16-4 4-6 9-7 14"/>
-        </svg>
-      </div>
-    </div>
-    <div class="read">
-      <p>An Arangetram — from the Tamil words <em>arangam</em> (stage) and <em>etram</em> (ascending) — is the formal debut recital of a Bharatanatyam dancer. It is the moment a student ascends the stage for the very first time as a solo artist, presenting a complete Margam before an audience, after years of rigorous training under a Guru.</p>
-      <p>More than a performance, the Arangetram is a rite of passage — a sacred ceremony that marks the transition from student to artist. It is an act of deep gratitude: to the Guru who shaped every mudra and footstep, to the parents who supported the journey, to the art form passed down through generations, and to the divine who animates it all.</p>
-      <p>The tradition is ancient, rooted in the temple-dance lineage where a dancer's debut was offered as a gift to the presiding deity. Today it continues as one of the most significant milestones in the life of a classical dancer — a lifelong memory of the first time the stage became home.</p>
-      <p><em>Saanvi has trained for over eight years under the guidance of Dr. Raksha Kartik, and today she offers this recital with devotion, humility, and joy.</em></p>
-    </div>
+    <div class="info-panels">
 
-    <div class="doc-grid" style="margin-top:48px">
-      <a class="doc-card" href="./Brochure.pdf" target="_blank" data-doc>
-        <span class="ic">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <path d="M14 2v6h6"/>
+      <!-- ① Natanam Institute of Dance -->
+      <div class="info-panel">
+        <button class="info-panel-head" aria-expanded="false" data-info-toggle>
+          Natanam Institute of Dance
+          <svg class="ip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-        </span>
-        <span>
-          <span class="t">Event Brochure</span>
-          <span class="s">Programme &amp; details · PDF</span>
-        </span>
-      </a>
-      <a class="doc-card" href="./Invitation.pdf" target="_blank" data-doc>
-        <span class="ic">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M4 4h16v12H5.2L4 17.2z"/>
-            <path d="M8 9h8M8 12h5"/>
+        </button>
+        <div class="info-panel-body">
+          <div class="info-panel-inner">
+            <div class="read">
+              <p>Natanam was founded with a vision to serve people and educate them in all art forms. The Institute of Dance was founded and is led by <em>Dr Smt Raksha Karthik</em>. Our vision is to introduce the future generation to the ancient and beautiful dance form of Bharatanatyam, music and mythology.</p>
+              <p>The Institute is committed to the time-tested ancient tradition of teaching, practice and performance, simultaneously exploring interpretations of the dance form. Natanam Foundation for Arts has been acclaimed for its efforts and has been appreciated highly by many people and organisations, and has also been invited to perform at many events. Students from the Institute have garnered awards and appreciations at various competitions.</p>
+              <p>Natanam has also been accredited by the <em>International Dance Council — CID</em>, the official umbrella organisation for all forms of dance in all countries, and a part of UNESCO.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② What is an Arangetram? -->
+      <div class="info-panel" id="about">
+        <button class="info-panel-head" aria-expanded="false" data-info-toggle>
+          What is an Arangetram?
+          <svg class="ip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-        </span>
-        <span>
-          <span class="t">Invitation</span>
-          <span class="s">You are warmly invited · PDF</span>
-        </span>
-      </a>
-    </div>
+        </button>
+        <div class="info-panel-body">
+          <div class="info-panel-inner">
+            <div class="read">
+              <p>An Arangetram — from the Tamil words <em>arangam</em> (stage) and <em>etram</em> (ascending) — is the formal debut recital of a Bharatanatyam dancer. It is the moment a student ascends the stage for the very first time as a solo artist, presenting a complete Margam before an audience, after years of rigorous training under a Guru.</p>
+              <p>More than a performance, the Arangetram is a rite of passage — a sacred ceremony that marks the transition from student to artist. It is an act of deep gratitude: to the Guru who shaped every mudra and footstep, to the parents who supported the journey, to the art form passed down through generations, and to the divine who animates it all.</p>
+              <p>The tradition is ancient, rooted in the temple-dance lineage where a dancer's debut was offered as a gift to the presiding deity. Today it continues as one of the most significant milestones in the life of a classical dancer — a lifelong memory of the first time the stage became home.</p>
+              <p><em>Saanvi has trained for over eight years under the guidance of Dr. Raksha Kartik, and today she offers this recital with devotion, humility, and joy.</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ Invite & Brochure (always visible) -->
+      <div class="info-panel info-panel-static">
+        <div class="info-panel-head" style="cursor:default">
+          Invite &amp; Brochure
+        </div>
+        <div class="info-panel-inner">
+          <div class="doc-grid">
+            <a class="doc-card" href="./Brochure.pdf" target="_blank" data-doc>
+              <span class="ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <path d="M14 2v6h6"/>
+                </svg>
+              </span>
+              <span>
+                <span class="t">Event Brochure</span>
+                <span class="s">Programme &amp; details · PDF</span>
+              </span>
+            </a>
+            <a class="doc-card" href="./Invitation.pdf" target="_blank" data-doc>
+              <span class="ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M4 4h16v12H5.2L4 17.2z"/>
+                  <path d="M8 9h8M8 12h5"/>
+                </svg>
+              </span>
+              <span>
+                <span class="t">Invitation</span>
+                <span class="s">You are warmly invited · PDF</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /info-panels -->
   </div>
 </section>
 
@@ -916,6 +964,18 @@ NrityakalaMandiram. She also teaches dance to the visually and audio/speech impa
     c.className = "credit";
     c.innerHTML = "<div class='role'>" + m.role + "</div><div class='name'>" + m.name + "</div>";
     cr.appendChild(c);
+  });
+
+  /* ──────────────────────────────────────────────────────────
+     INFO PANEL TOGGLES
+  ────────────────────────────────────────────────────────── */
+  document.querySelectorAll("[data-info-toggle]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var expanded = btn.getAttribute("aria-expanded") === "true";
+      var body = btn.nextElementSibling;
+      btn.setAttribute("aria-expanded", !expanded);
+      body.classList.toggle("open", !expanded);
+    });
   });
 
   /* ──────────────────────────────────────────────────────────
