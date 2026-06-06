@@ -415,6 +415,22 @@ section { position: relative; }
 }
 .team-card .name .hon { color: var(--c-ink-soft); font-size: 16px; font-style: italic; display: block; }
 
+.guru-bio {
+  margin: clamp(32px, 5vw, 56px) 0 0;
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-left: 4px solid var(--c-gold);
+  border-radius: var(--r-md); padding: clamp(24px, 4vw, 40px);
+}
+.guru-bio .bio-name {
+  font-family: var(--font-display); font-size: clamp(20px, 3vw, 26px);
+  color: var(--c-maroon); font-weight: 600; margin-bottom: 18px;
+}
+.guru-bio p {
+  font-family: var(--font-body); font-size: 17px; line-height: 1.8;
+  color: var(--c-ink-soft); margin-bottom: 14px;
+}
+.guru-bio p:last-child { margin-bottom: 0; }
+
 .credits-head { text-align: center; margin: clamp(48px, 7vw, 80px) 0 30px; }
 .credits-head h3 { font-family: var(--font-display); font-size: clamp(26px, 4vw, 38px); color: var(--c-maroon); }
 .credits-grid {
@@ -683,6 +699,15 @@ section { position: relative; }
     </div>
     <div class="team-grid" id="ensemble"></div>
 
+    <div class="guru-bio">
+      <div class="bio-name">Acharya Dr. Raksha Karthik</div>
+      <p>Dr. Smt Raksha Karthik, is a Consultant Dental Surgeon &amp; Bharatanatyam Guru / Artist and choreographer from Bangalore, India. She is accredited by the International Dance Council- CID, and is recognised by UNESCO. She also is a member of the American Dance Therapy Association. Dr. Raksha Karthik, an exponent of Vazhuvoor style of Bharatanatyam started learning the art of dancing at the age of seven. She has been trained by Guru Kum. Bhanumathi &amp; Guru Sheela Chadrasekhar at
+NrityakalaMandiram. She also teaches dance to the visually and audio/speech impaired from the last 9 years. Being one of the teachers of Bharatanatyam to the visually impaired and audio/speech impaired, she believes that art is universal.</p>
+      <p>A dental surgeon by profession and artist by passion, she is truly living her passion.</p>
+      <p>Raksha has to her credit many solo/group dance performances too and has also traveled on many national/ international performances. She is also a graded artist in Doordarshan. She has been awarded the 'Acharya Devo Bhava plaque of honor for vocational service by Rotary Bangalore South West, Pandit Bhimsen Joshi Memorial
+*Yuva Kala Guru Satkar State Award, Sri Jaydev Samarooh 'Padmavati Pratibha Puraskar' and honored with the Title 'Karunada Lalithakalaa Thilaka' for her contributions in the field of Bharatanatyam.</p>
+    </div>
+
     <div class="credits-head">
       <h3>Credits &amp; Acknowledgements</h3>
       <div class="divider" style="margin-top:16px">
@@ -794,7 +819,7 @@ section { position: relative; }
   ];
 
   var ENSEMBLE = [
-    { role: "Nattuvangam",  name: "Vidushi Dr. Raksha Karthik",          hon: "Guru &amp; conductor" },
+    { role: "Nattuvangam",  name: "Vidushi Dr. Raksha Karthik",          hon: "Director &amp; Guru" },
     { role: "Vocal",        name: "Vidwan Shri Balasubramanya Sharma" },
     { role: "Mridangam",    name: "Vidwan Bhavani Shankar" },
     { role: "Flute",        name: "Vidwan Deepak Hebbal" },
@@ -907,7 +932,7 @@ section { position: relative; }
   /* ──────────────────────────────────────────────────────────
      SCROLLSPY
   ────────────────────────────────────────────────────────── */
-  var sections = ["home", "margam", "journey", "live", "team"]
+  var sections = ["home", "natanam", "margam", "journey", "live", "team"]
     .map(function (id) { return document.getElementById(id); })
     .filter(Boolean);
 
