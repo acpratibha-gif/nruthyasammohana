@@ -875,7 +875,12 @@ section { position: relative; }
       ],
       stories: [
         { title: "Story of Lord Ganesha", body: "Goddess Parvati fashioned a young boy from the turmeric paste she had applied to her body and breathed life into him. She named him Ganesha and asked him to guard her chamber while she bathed. When Lord Shiva arrived and was denied entry by the boy, a fierce confrontation ensued. Unaware of Ganesha's identity, Shiva severed his head. Grief-stricken, Parvati demanded that her son be restored. To console her, Shiva instructed his attendants to bring the head of the first living being they encountered. An elephant's head was brought and placed upon the boy's body, restoring him to life. Thus was born Ganesha, the elephant-headed deity who is revered as the remover of obstacles and the lord of auspicious beginnings." },
-        { title: "Story of Lord Subramanya", body: "From Lord Shiva's divine third eye emerged six brilliant sparks of fire. These sparks came to rest in the reeds of the Saravana forest, where they manifested as six radiant infants. The six babies were lovingly nurtured by the celestial maidens known as the Krittikas. When Goddess Parvati beheld the children, she was filled with wonder and affection. Embracing all six infants at once, she united them into one divine child with six faces and a single body. Thus was born Shanmukha, also known as Subramanya, Muruga, and Kartikeya." }
+        { title: "Story of Lord Subramanya", body: "From Lord Shiva's divine third eye emerged six brilliant sparks of fire. These sparks came to rest in the reeds of the Saravana forest, where they manifested as six radiant infants. The six babies were lovingly nurtured by the celestial maidens known as the Krittikas. When Goddess Parvati beheld the children, she was filled with wonder and affection. Embracing all six infants at once, she united them into one divine child with six faces and a single body. Thus was born Shanmukha, also known as Subramanya, Muruga, and Kartikeya." },
+        { title: "Story of Mahishasura", body: [
+          "Mahishasura was a demon who could change shape and defeated the gods, taking control of the heavens. With a boon that made him invincible to all male warriors, he terrorized the gods. In desperation, they prayed to Chamundeshwari, the supreme form of Shakti, who appeared with weapons from all the gods. She mounted a lion and fought Mahishasura in a fierce battle.Ultimately. Chamundeshwari defeated and killed him, restoring order to the universe. This story symbolizes the triumph of feminine power over evil.",
+          "In the second half of the Varna, Muthiah Bhagavathar shifts focus to a prayer for the protection of the Mysore king. *Nalvadi Krishna Raja Wodeyar&rdquo;. The composer calls upon the goddess Meenakshi (Jaganmata, the mother of the universe) to safeguard the king, seeking her blessings for his prosperity, stability. and success. This part of the composition emphasizes that the well-being of a just ruler is safeguarded by the goddess, ensuring his reign is marked by success and harmony.",
+          "Through this Daru Varna, Bhagavathar captures the dynamic duality of the goddess, portraying her as both the creator and destroyer, the mother and the warrior. The composition highlights Shakti as the supreme feminine force. embodying the balance of gentleness and strength, creation and destruction, central to the cosmos"
+        ] }
       ],
       body2: [
         "The composition flows between depictions of her serene and powerful forms.",
@@ -958,8 +963,10 @@ section { position: relative; }
     }
     if (p.stories) {
       p.stories.forEach(function (s) {
+        var storyParas = Array.isArray(s.body) ? s.body : [s.body];
+        var storyBodyHtml = storyParas.map(function(sp){ return "<p>" + sp + "</p>"; }).join("");
         bodyHtml += "<details class='story-details'><summary class='story-summary'>" + s.title + "</summary>" +
-          "<div class='story-body'><p>" + s.body + "</p></div></details>";
+          "<div class='story-body'>" + storyBodyHtml + "</div></details>";
       });
     }
     if (p.body2) {
