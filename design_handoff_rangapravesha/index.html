@@ -513,6 +513,48 @@ section { position: relative; }
   width: 100%; height: 100%;
   object-fit: cover; display: block;
 }
+/* ── Nested story accordion (piece 5 sub-tabs) ─── */
+.story-details {
+  margin: 18px 0 6px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: rgba(247,239,224,.5);
+  overflow: hidden;
+}
+.story-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  font-family: var(--font-label);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c-maroon);
+  user-select: none;
+}
+.story-summary::-webkit-details-marker { display: none; }
+.story-summary::after {
+  content: '+';
+  font-size: 18px;
+  font-family: var(--font-display);
+  color: var(--c-gold);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.story-details[open] .story-summary {
+  border-bottom: 1px solid var(--c-line);
+}
+.story-details[open] .story-summary::after { content: '\2212'; }
+.story-body { padding: 16px 20px 20px; }
+.story-body p {
+  font-size: 15px;
+  line-height: 1.78;
+  color: var(--c-ink);
+  margin: 0;
+}
 </style>
 </head>
 <body>
@@ -824,13 +866,20 @@ section { position: relative; }
         "The sahitya describes little Rama’s &ldquo;ṭhumaka calata&rdquo; (toddling steps) and &ldquo;kilaki kilaki&rdquo; (joyful laughter) as He runs, falls, and is lovingly gathered into the arms of Dasharatha’s queens. Mother Kausalya gently wipes the dust from His body, comforts Him with tender words, and showers Him with affection. Tulsidas delights in Rama’s coral-red lips, sweet speech, and childlike innocence, culminating in the poet’s realization that nothing in creation can compare to the beauty and charm of Lord Rama."
       ]
     },
-    {
+        {
       n: 5, title: "Maathe Malayadwaja", kind: "Daru Varna",
-      meta: "Raga Kamas · Tala Adi · Composer Muthiah Bhagavathar",
+      meta: "Raga: Kamas · Tala: Aadi · Composer: Muthiah Bhagavathar",
       body: [
-        "This Daru Varna is dedicated to Meenakshi, an incarnation of Shakti. She is praised as the daughter of King Malayadhvaja Pandya and honoured as the mother of Ganesha and Subramanya; the dancer depicts the birth stories of both divine sons.",
-        "The composition flows between her serene and fierce forms — &ldquo;Shankari&rdquo; the peaceful, &ldquo;Chandrakaladhari&rdquo; the moon-crowned — and Chamundeshwari, slayer of Mahishasura. The dancer enacts the battle between goddess and demon, culminating in the triumph of feminine divine power.",
-        "In the second half, the composer prays for the protection of the Mysore king, calling upon Meenakshi as Jaganmata — capturing the goddess as creator and destroyer, mother and warrior."
+        "This Daru Varna is dedicated to Meenakshi, an incarnation of Shakti, and showcases her multifaceted nature. The composition portrays the goddess in her various roles-both as a nurturing mother and a fierce protector.",
+        "The goddess is first praised as the daughter of King Malayadhvaja Pandya, a revered warrior and devotee of Shiva. She is also honored as the mother of Lord Ganesha and Lord Subramanya, emphasizing her central role in nurturing the celestial family. The dancer depicts the birth stories of Lord Ganesha and Lord Subramanya."
+      ],
+      stories: [
+        { title: "Story of Lord Ganesha", body: "Goddess Parvati fashioned a young boy from the turmeric paste she had applied to her body and breathed life into him. She named him Ganesha and asked him to guard her chamber while she bathed. When Lord Shiva arrived and was denied entry by the boy, a fierce confrontation ensued. Unaware of Ganesha's identity, Shiva severed his head. Grief-stricken, Parvati demanded that her son be restored. To console her, Shiva instructed his attendants to bring the head of the first living being they encountered. An elephant's head was brought and placed upon the boy's body, restoring him to life. Thus was born Ganesha, the elephant-headed deity who is revered as the remover of obstacles and the lord of auspicious beginnings." },
+        { title: "Story of Lord Subramanya", body: "From Lord Shiva's divine third eye emerged six brilliant sparks of fire. These sparks came to rest in the reeds of the Saravana forest, where they manifested as six radiant infants. The six babies were lovingly nurtured by the celestial maidens known as the Krittikas. When Goddess Parvati beheld the children, she was filled with wonder and affection. Embracing all six infants at once, she united them into one divine child with six faces and a single body. Thus was born Shanmukha, also known as Subramanya, Muruga, and Kartikeya." }
+      ],
+      body2: [
+        "The composition flows between depictions of her serene and powerful forms.",
+        "Meenakshi is described as &ldquo;Shankari&rdquo; (the peaceful one), &ldquo;Chandrakaladhari&rdquo; the moon-crowned one), and &ldquo;Shatodari&rdquo; (the one with six breasts, symbolizing fertility and abundance). These peaceful forms highlight her nurturing and compassionate aspects. However, the goddess also takes on the fierce form of &ldquo;Chamundeshwari&rdquo;. the slayer of Mahishasura, symbolizing her power and ability to destroy evil. The dancer depicts the story of Mahishasura."
       ]
     },
     {
@@ -906,6 +955,15 @@ section { position: relative; }
       bodyHtml += p.sahitya.map(function (s) {
         return "<div class='sahitya'><div class='line'>" + s[0] + "</div><div class='gloss'>" + s[1] + "</div></div>";
       }).join("");
+    }
+    if (p.stories) {
+      p.stories.forEach(function (s) {
+        bodyHtml += "<details class='story-details'><summary class='story-summary'>" + s.title + "</summary>" +
+          "<div class='story-body'><p>" + s.body + "</p></div></details>";
+      });
+    }
+    if (p.body2) {
+      bodyHtml += p.body2.map(function (para) { return "<p>" + para + "</p>"; }).join("");
     }
 
     item.innerHTML =
