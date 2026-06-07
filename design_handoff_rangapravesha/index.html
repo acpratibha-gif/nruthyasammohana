@@ -542,12 +542,10 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
 }
 .marquee-track {
   display: flex; flex-wrap: nowrap; width: max-content;
-  animation: journey-marquee 10s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-.marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-slide { flex: 0 0 auto; margin-right: 22px; }
 .marquee-slide .img-slot {
   display: block;
@@ -564,13 +562,6 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
   object-fit: cover; display: block;
 }
 .marquee-slide .img-slot:hover { transform: translateY(-4px); transition: transform .4s var(--ease); }
-@keyframes journey-marquee {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation-duration: 120s; }
-}
 
 /* ============================================================
    Live
@@ -1318,17 +1309,47 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   });
 
   /* ============================================================
-     JOURNEY MARQUEE — duplicate slides for seamless loop
+     JOURNEY MARQUEE — JS requestAnimationFrame (no CSS flash)
      ============================================================ */
-  var marquee = document.getElementById("journeyMarquee");
-  if (marquee) {
-    var originals = Array.prototype.slice.call(marquee.children);
+  (function () {
+    var track = document.getElementById("journeyMarquee");
+    if (!track) return;
+
+    /* duplicate slides for seamless loop */
+    var originals = Array.prototype.slice.call(track.children);
     originals.forEach(function (node) {
       var clone = node.cloneNode(true);
       clone.setAttribute("aria-hidden", "true");
-      marquee.appendChild(clone);
+      track.appendChild(clone);
     });
-  }
+
+    var pos = 0;
+    var lastTs = null;
+    var paused = false;
+    var speed = 120; /* px per second */
+    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) return; /* respect system setting */
+
+    var wrap = track.parentElement; /* .marquee */
+    wrap.addEventListener("mouseenter", function () { paused = true; });
+    wrap.addEventListener("mouseleave", function () { paused = false; });
+    wrap.addEventListener("touchstart", function () { paused = true; }, { passive: true });
+    wrap.addEventListener("touchend",   function () { paused = false; });
+
+    function tick(ts) {
+      if (lastTs !== null && !paused) {
+        var delta = ts - lastTs;
+        pos -= speed * delta / 1000;
+        /* setWidth = half of scrollWidth (original set only) */
+        var setWidth = track.scrollWidth / 2;
+        if (pos <= -setWidth) pos += setWidth; /* invisible reset */
+        track.style.transform = "translate3d(" + pos + "px, 0, 0)";
+      }
+      lastTs = ts;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
 
   /* ============================================================
      MOBILE MENU
