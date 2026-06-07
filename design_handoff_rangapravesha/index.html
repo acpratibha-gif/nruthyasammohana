@@ -246,7 +246,13 @@ body.ornament-min .hero::before { display: none; }
 }
 .hero-meta .mi svg { width: 17px; height: 17px; color: var(--c-hero-gold); stroke-width: 1.4; }
 .hero-meta .sep { width: 1px; background: rgba(227,189,106,.3); align-self: stretch; }
-.hero-cta { display: inline-flex; align-items: center; gap: 10px; margin-top: 34px; }
+.hero-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 34px; }
+.hero-cta .btn { flex: 1 1 auto; justify-content: center; min-width: 160px; max-width: 240px; }
+@media (max-width: 480px) {
+  .hero-meta .sep { display: none; }
+  .hero-meta { gap: 0 16px; }
+  .hero-cta .btn { flex: 1 1 100%; max-width: 100%; }
+}
 
 /* hero portrait gallery */
 .hero-gallery {
