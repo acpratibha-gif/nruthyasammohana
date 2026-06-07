@@ -1,12 +1,12 @@
-﻿﻿<!DOCTYPE html>
-<html lang="en"><!-- cache: 20260607013058 -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nruthyasammohana · Saanvi Lalwani</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cormorant+SC:wght@500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cormorant+SC:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database-compat.js"></script>
 
@@ -17,11 +17,12 @@
    opening into warm ivory. Classical serif type.
    ============================================================ */
 
+/* ---- Theme tokens ----------------------------------------- */
 :root {
   /* surfaces */
   --c-bg:          #f7efe0;
   --c-bg-2:        #f1e6d2;
-  --c-surface:     #fffaf1;
+  --c-surface:     #f4e7cf;
   --c-ink:         #3a241c;
   --c-ink-soft:    #6f5848;
   --c-line:        #e0d0b3;
@@ -38,8 +39,9 @@
   --c-hero-fg:     #f4e3c4;
   --c-hero-gold:   #e3bd6a;
   /* type */
+  --font-name:    "Cinzel", "Cormorant Garamond", serif;
   --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-body:    "Spectral", Georgia, serif;
+  --font-body:    "EB Garamond", "Spectral", Georgia, serif;
   --font-label:   "Cormorant SC", "Cormorant Garamond", serif;
   --font-deva:    "Tiro Devanagari Sanskrit", "Cormorant Garamond", serif;
   /* layout */
@@ -52,7 +54,23 @@
   --ease: cubic-bezier(.22,.61,.36,1);
 }
 
-/* â”€â”€ Base â”€â”€ */
+/* ---- Dark mode -------------------------------------------- */
+html.is-dark {
+  --c-bg:        #1b0e12;
+  --c-bg-2:      #241016;
+  --c-surface:   #2a131a;
+  --c-ink:       #f1ddc4;
+  --c-ink-soft:  #c8a98f;
+  --c-line:      #4a2530;
+  --c-maroon:    #7e1628;
+  --c-gold:      #d9b25f;
+  --c-gold-soft: #e3bd6a;
+  --c-accent:    #d56b43;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -79,13 +97,19 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
 .read      { max-width: var(--readw); margin: 0 auto; }
 
+/* eyebrow */
 .eyebrow {
   font-family: var(--font-label);
   font-size: 14px; letter-spacing: .32em; text-transform: uppercase;
   color: var(--c-gold); font-weight: 600; margin: 0;
 }
 
-/* â”€â”€ Lotus divider â”€â”€ */
+/* ornamental star */
+.star { color: var(--c-gold); font-size: 20px; line-height: 1; display: inline-block; }
+
+/* ============================================================
+   Ornaments
+   ============================================================ */
 .divider {
   display: flex; align-items: center; justify-content: center; gap: 18px;
   margin: 0 auto; color: var(--c-gold);
@@ -97,7 +121,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .divider::after { background: linear-gradient(90deg, currentColor, transparent); }
 .divider .lotus { width: 34px; height: 22px; opacity: .9; }
 
-/* â”€â”€ Top nav â”€â”€ */
+body.ornament-min .divider .lotus { display: none; }
+body.ornament-min .divider::before,
+body.ornament-min .divider::after { width: clamp(60px, 24vw, 220px); }
+
+.corner-motif { display: none; }
+body.ornament-rich .corner-motif { display: block; }
+
+/* ============================================================
+   Top nav
+   ============================================================ */
 .nav {
   position: sticky; top: 0; z-index: 50;
   height: var(--nav-h);
@@ -111,11 +144,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .nav .container { display: flex; align-items: center; justify-content: space-between; }
 
 .brand {
-  font-family: var(--font-display);
-  font-size: 24px; font-weight: 600; letter-spacing: .01em;
+  font-family: var(--font-name);
+  font-size: 16px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
   color: var(--c-maroon); text-decoration: none;
-  display: flex; align-items: baseline; gap: 9px;
+  display: flex; align-items: center; gap: 9px;
 }
+html.is-dark .brand { color: var(--c-gold-soft); }
 .brand .brand-star { font-size: 14px; color: var(--c-gold); }
 .brand small {
   font-family: var(--font-label); font-size: 12px; letter-spacing: .26em;
@@ -130,11 +164,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   position: relative; transition: color .2s var(--ease);
 }
 .nav-links a:hover { color: var(--c-maroon); }
+html.is-dark .nav-links a:hover { color: var(--c-gold-soft); }
 .nav-links a.active { color: var(--c-maroon); }
+html.is-dark .nav-links a.active { color: var(--c-gold-soft); }
 .nav-links a.active::after {
   content: ""; position: absolute; left: 14px; right: 14px; bottom: 2px;
   height: 2px; background: var(--c-gold); border-radius: 2px;
 }
+.nav-toggle { display: none; }
 .menu-btn {
   display: none; background: none; border: 1px solid var(--c-line);
   color: var(--c-maroon); border-radius: var(--r-sm);
@@ -148,17 +185,19 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
     position: absolute; top: var(--nav-h); left: 0; right: 0;
     flex-direction: column; align-items: stretch; gap: 0;
     background: var(--c-bg); border-bottom: 1px solid var(--c-line);
-    padding: 8px 0;
+    padding: 8px 0; transform-origin: top;
     max-height: 0; overflow: hidden; opacity: 0;
     transition: max-height .35s var(--ease), opacity .25s var(--ease);
   }
   .nav.menu-open .nav-links { max-height: 380px; opacity: 1; }
   .nav-links a { padding: 14px 28px; border-radius: 0; }
   .nav-links a.active::after { display: none; }
-  .nav-links a.active { background: rgba(182,134,44,.12); }
+  .nav-links a.active { background: color-mix(in srgb, var(--c-gold) 14%, transparent); }
 }
 
-/* â”€â”€ Hero â”€â”€ */
+/* ============================================================
+   Hero
+   ============================================================ */
 .hero {
   position: relative; overflow: hidden;
   background: radial-gradient(120% 90% at 50% -10%, var(--c-hero-bg-2), var(--c-hero-bg) 62%);
@@ -167,12 +206,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   text-align: center;
 }
 .hero::before {
-  content: ""; position: absolute; top: -38%; left: 50%; transform: translateX(-50%);
-  width: min(820px, 120vw); aspect-ratio: 1;
+  content: ""; position: absolute; inset: -10% -10% auto 50%;
+  transform: translateX(-50%);
+  width: min(820px, 120vw); aspect-ratio: 1; top: -38%;
   background: repeating-conic-gradient(from 0deg at 50% 50%,
     transparent 0deg 5deg, rgba(227,189,106,.05) 5deg 6deg);
   border-radius: 50%; pointer-events: none;
 }
+body.ornament-min .hero::before { display: none; }
 .hero .container { position: relative; z-index: 2; }
 .hero .eyebrow { color: var(--c-hero-gold); }
 .hero-deva {
@@ -180,8 +221,11 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   font-size: clamp(20px, 3.4vw, 30px); margin: 8px 0 4px; opacity: .9; font-weight: 400;
 }
 .hero h1 {
-  font-size: clamp(44px, 10vw, 112px); font-weight: 600; letter-spacing: -.02em;
-  margin: 6px 0 4px; color: #fff; text-shadow: 0 2px 40px rgba(0,0,0,.3);
+  font-family: var(--font-name);
+  font-size: clamp(30px, 5.6vw, 64px);
+  font-weight: 700; letter-spacing: .04em; line-height: 1.12; text-transform: uppercase;
+  margin: 12px 0 10px; color: #f4e7cf;
+  text-shadow: 0 2px 40px rgba(0,0,0,.4);
 }
 .hero h1 em { font-style: italic; color: var(--c-hero-gold); }
 .hero-sub {
@@ -204,7 +248,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .hero-meta .sep { width: 1px; background: rgba(227,189,106,.3); align-self: stretch; }
 .hero-cta { display: inline-flex; align-items: center; gap: 10px; margin-top: 34px; }
 
-/* Hero gallery */
+/* hero portrait gallery */
 .hero-gallery {
   display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 16px;
   margin-top: clamp(40px, 6vw, 64px); align-items: end;
@@ -227,10 +271,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   .hero-gallery .g-short { height: 200px; }
 }
 
-/* â”€â”€ Buttons â”€â”€ */
+/* ============================================================
+   Buttons
+   ============================================================ */
 .btn {
   font-family: var(--font-label); letter-spacing: .14em; text-transform: uppercase;
-  font-size: 14px; font-weight: 600;
+  font-size: 14px; font-weight: 600; white-space: nowrap;
   padding: 13px 26px; border-radius: 999px; cursor: pointer;
   text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
   border: 1px solid transparent; transition: all .22s var(--ease);
@@ -240,13 +286,23 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .btn-gold:hover { background: var(--c-gold-soft); box-shadow: 0 8px 24px rgba(182,134,44,.35); }
 .btn-outline { border-color: var(--c-hero-gold); color: var(--c-hero-gold); background: transparent; }
 .btn-outline:hover { background: rgba(227,189,106,.12); }
+.btn-ink { border-color: var(--c-maroon); color: var(--c-maroon); background: transparent; }
+.btn-ink:hover { background: var(--c-maroon); color: var(--c-bg); }
 
-/* â”€â”€ Section scaffolding â”€â”€ */
+/* ============================================================
+   Section scaffolding
+   ============================================================ */
 section { position: relative; }
 .section     { padding: clamp(64px, 9vw, 116px) 0; }
 .section.alt { background: var(--c-bg-2); }
 .section-head { text-align: center; margin-bottom: clamp(36px, 5vw, 60px); }
-.section-head h2 { font-size: clamp(38px, 6vw, 68px); color: var(--c-maroon); margin: 12px 0 0; }
+.section-head h2 {
+  font-family: var(--font-name);
+  font-weight: 700; letter-spacing: .035em; text-transform: uppercase;
+  font-size: clamp(28px, 4.2vw, 50px); color: var(--c-maroon);
+  margin: 12px 0 0;
+}
+html.is-dark .section-head h2 { color: var(--c-gold-soft); }
 .section-head .divider { margin-top: 20px; }
 .section-lead {
   font-family: var(--font-display); font-style: italic;
@@ -254,7 +310,9 @@ section { position: relative; }
   text-align: center; margin: 18px auto 0; max-width: 620px;
 }
 
-/* â”€â”€ Accordion â”€â”€ */
+/* ============================================================
+   Accordion (Margam)
+   ============================================================ */
 .accordion { border-top: 1px solid var(--c-line); }
 .acc-item   { border-bottom: 1px solid var(--c-line); }
 .acc-head {
@@ -264,9 +322,11 @@ section { position: relative; }
   transition: color .2s var(--ease);
 }
 .acc-head:hover { color: var(--c-maroon); }
+html.is-dark .acc-head:hover { color: var(--c-gold-soft); }
 .acc-num {
   font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px);
   color: var(--c-gold); font-weight: 500; line-height: 1; min-width: 1.6em;
+  font-variant-numeric: lining-nums;
 }
 .acc-title { flex: 1; }
 .acc-title .t {
@@ -294,24 +354,75 @@ section { position: relative; }
 .acc-body-inner p { margin: 0 0 16px; }
 .acc-body-inner p:last-child { margin-bottom: 0; }
 .acc-body-inner em { color: var(--c-ink); }
+
+/* Floating collapse button */
+.collapse-row {
+  display: flex; justify-content: flex-end;
+  margin-top: 26px;
+  position: sticky; bottom: 18px; pointer-events: none;
+}
+.collapse-btn {
+  pointer-events: auto;
+  width: 46px; height: 46px; flex: none; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  background: var(--c-maroon); color: var(--c-hero-fg);
+  border: 1px solid color-mix(in srgb, var(--c-gold) 55%, transparent);
+  box-shadow: 0 6px 20px rgba(44, 8, 16, .28);
+  transition: transform .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+}
+.collapse-btn svg { width: 18px; height: 18px; }
+.collapse-btn:hover { background: var(--c-maroon-deep); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(44, 8, 16, .34); }
+.collapse-btn:active { transform: translateY(0); }
+.collapse-btn:focus-visible { outline: 2px solid var(--c-gold); outline-offset: 3px; }
+@media (max-width: 600px) {
+  .collapse-row { bottom: 14px; margin-top: 20px; }
+  .collapse-btn { width: 42px; height: 42px; }
+  .acc-head { gap: 12px; padding: 20px 0; }
+  .acc-body-inner { padding-left: 4px; }
+}
+
 .sahitya { border-left: 2px solid var(--c-gold); padding: 4px 0 4px 20px; margin: 20px 0; }
 .sahitya .line  { font-family: var(--font-deva); color: var(--c-maroon); font-size: 17px; }
+html.is-dark .sahitya .line { color: var(--c-gold-soft); }
 .sahitya .gloss { font-style: italic; font-size: 16px; margin-top: 2px; }
 .subhead {
   display: block;
   font-family: var(--font-label); letter-spacing: .2em; text-transform: uppercase;
   font-size: 13px; color: var(--c-gold); font-weight: 600; margin: 22px 0 8px;
 }
-@media (max-width: 600px) {
-  .acc-head { gap: 12px; padding: 20px 0; }
-  .acc-body-inner { padding-left: 4px; }
-}
 
-/* â”€â”€ Document cards â”€â”€ */
-.doc-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 18px; max-width: 760px; margin: 0 auto;
+/* ============================================================
+   Nested story sub-accordion (Margam pieces)
+   ============================================================ */
+.story-details {
+  margin: 18px 0 6px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: rgba(247,239,224,.5);
+  overflow: hidden;
 }
+.story-summary {
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px;
+  font-family: var(--font-label); font-size: 11.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--c-maroon); user-select: none;
+}
+.story-summary::-webkit-details-marker { display: none; }
+.story-summary::after {
+  content: '+'; font-size: 18px; font-family: var(--font-display);
+  color: var(--c-gold); line-height: 1; flex-shrink: 0;
+}
+.story-details[open] .story-summary { border-bottom: 1px solid var(--c-line); }
+.story-details[open] .story-summary::after { content: '\2212'; }
+.story-body { padding: 16px 20px 20px; }
+.story-body p { font-size: 15px; line-height: 1.78; color: var(--c-ink); margin: 0 0 12px; }
+.story-body p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   Document cards (Brochure / Invite)
+   ============================================================ */
+.doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 760px; margin: 0 auto; }
 @media (max-width: 560px) { .doc-grid { grid-template-columns: 1fr; } }
 .doc-card {
   display: flex; align-items: center; gap: 18px;
@@ -325,49 +436,65 @@ section { position: relative; }
   background: color-mix(in srgb, var(--c-gold) 16%, transparent);
   display: grid; place-items: center; color: var(--c-maroon);
 }
+html.is-dark .doc-card .ic { color: var(--c-gold-soft); }
 .doc-card .ic svg { width: 24px; height: 24px; stroke-width: 1.5; }
 .doc-card .t { font-family: var(--font-display); font-size: 22px; font-weight: 600; display: block; }
 .doc-card .s { font-size: 14px; color: var(--c-ink-soft); font-style: italic; display: block; }
 @keyframes nudge {
   0%, 100% { transform: translateY(-2px); }
   25%       { transform: translateY(-2px) translateX(-4px); }
-  75%       { transform: translateY(-2px) translateX(4px); }
+  75%       { transform: translateY(-2px) translateX( 4px); }
 }
 .doc-card.nudge { animation: nudge .4s var(--ease); }
 
-/* â”€â”€ Info Panels (Natanam / Arangetram / Docs) â”€â”€ */
-.info-panels { display: flex; flex-direction: column; gap: 12px; }
-.info-panel {
-  border: 1px solid var(--c-line); border-radius: var(--r-md);
-  background: var(--c-surface); overflow: hidden;
+/* ============================================================
+   Info cards (Natanam / Arangetram / Invite)
+   ============================================================ */
+.info-stack { display: flex; flex-direction: column; gap: 22px; max-width: 1000px; margin: 0 auto; }
+.info-card {
+  background: var(--c-surface); border: 1px solid var(--c-line); border-radius: 16px;
+  box-shadow: 0 1px 0 rgba(110,16,35,.03); overflow: hidden;
 }
-.info-panel-head {
-  width: 100%; display: flex; align-items: center; justify-content: space-between;
-  padding: 22px 28px; background: none; border: none; cursor: pointer;
-  text-align: left; gap: 16px;
-  font-family: var(--font-display); font-size: clamp(19px, 2.6vw, 24px);
-  color: var(--c-ink); font-weight: 600; line-height: 1.25;
-  transition: color .2s var(--ease), background .2s var(--ease);
+.info-head {
+  width: 100%; background: none; border: 0; cursor: pointer; text-align: left;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 30px 34px; transition: background .25s var(--ease);
 }
-.info-panel-head:hover { color: var(--c-maroon); background: rgba(182,134,44,.05); }
-.info-panel-head[aria-expanded="true"] { color: var(--c-maroon); }
-.info-panel-head .ip-icon {
-  flex-shrink: 0; width: 22px; height: 22px; color: var(--c-gold);
-  transition: transform .32s var(--ease);
+.info-head:hover { background: color-mix(in srgb, var(--c-gold) 6%, transparent); }
+.info-head h3 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(22px, 3vw, 30px); color: var(--c-maroon); letter-spacing: 0; line-height: 1.1;
+  margin: 0;
 }
-.info-panel-head[aria-expanded="true"] .ip-icon { transform: rotate(45deg); }
-.info-panel-body {
-  max-height: 0; overflow: hidden;
-  transition: max-height .45s var(--ease);
+.info-icon {
+  width: 34px; height: 34px; flex: none; border-radius: 50%;
+  border: 1px solid var(--c-line); display: grid; place-items: center;
+  color: var(--c-gold); transition: transform .35s var(--ease), background .25s var(--ease);
 }
-.info-panel-body.open { max-height: 2000px; }
-.info-panel-inner { padding: 4px 28px 28px; }
-.info-panel-inner .read p { font-size: 18px; }
-.info-panel-static .info-panel-head { cursor: default; }
-.info-panel-static .info-panel-head:hover { background: none; color: var(--c-ink); }
-.info-panel-static .info-panel-inner { padding: 0 28px 28px; }
+.info-icon svg { width: 16px; height: 16px; }
+.info-card.open .info-icon { transform: rotate(45deg); background: color-mix(in srgb, var(--c-gold) 16%, transparent); }
+.info-body { overflow: hidden; max-height: 0; transition: max-height .5s var(--ease); }
+.info-inner { padding: 0 34px 30px; color: var(--c-ink-soft); }
+.info-inner p { font-size: 17px; line-height: 1.72; margin: 0 0 20px; }
+.info-inner p:last-of-type { margin-bottom: 0; }
+.info-inner .drop { font-size: 18px; margin-bottom: 20px; }
+.info-inner em { color: var(--c-ink); font-style: italic; }
+.info-inner .cid-line {
+  font-family: var(--font-label); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--c-gold); margin-top: 18px;
+}
+.info-card.static .info-head.static-head { cursor: default; padding-bottom: 0; align-items: flex-start; }
+.info-card.static .info-head.static-head:hover { background: none; }
+.info-static { padding: 14px 34px 30px; }
+.info-static .doc-grid { margin: 0; }
+@media (max-width: 600px) {
+  .info-head { padding: 22px 22px; }
+  .info-inner, .info-static { padding-left: 22px; padding-right: 22px; }
+}
 
-/* â”€â”€ Journey â”€â”€ */
+/* ============================================================
+   Journey
+   ============================================================ */
 .journey-wrap {
   display: grid; grid-template-columns: 0.9fr 1.1fr;
   gap: clamp(28px, 5vw, 64px); align-items: center;
@@ -382,6 +509,7 @@ section { position: relative; }
   font-family: var(--font-display); float: left; font-size: 76px; line-height: .72;
   padding: 8px 12px 0 0; color: var(--c-maroon); font-weight: 600;
 }
+html.is-dark .journey-text .drop::first-letter { color: var(--c-gold-soft); }
 .journey-stats { display: flex; gap: 36px; margin-top: 28px; flex-wrap: wrap; }
 .journey-stats .st .n {
   font-family: var(--font-display); font-size: 46px; color: var(--c-gold);
@@ -392,17 +520,58 @@ section { position: relative; }
   font-size: 12px; color: var(--c-ink-soft); margin-top: 4px;
 }
 
-/* â”€â”€ Live â”€â”€ */
+/* Auto-scrolling marquee gallery */
+.journey-marquee-wrap { margin-top: clamp(48px, 7vw, 78px); }
+.film-eyebrow {
+  font-family: var(--font-display); font-style: italic; font-size: clamp(20px, 3vw, 27px);
+  color: var(--c-maroon); text-align: center; margin-bottom: 34px;
+}
+html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
+.marquee {
+  position: relative; width: 100vw; margin-left: calc(50% - 50vw);
+  overflow: hidden; padding: 10px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.marquee-track {
+  display: flex; width: max-content;
+  animation: journey-marquee 64s linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-slide { flex: 0 0 auto; margin-right: 22px; }
+.marquee-slide .img-slot {
+  display: block;
+  width: clamp(188px, 22vw, 232px); height: clamp(256px, 30vw, 318px);
+  border-radius: 8px;
+  border: 1px solid var(--c-gold-soft);
+  box-shadow: 0 0 0 5px var(--c-surface), 0 12px 28px rgba(110,16,35,.14);
+  transition: transform .4s var(--ease);
+  background: rgba(227,189,106,.06);
+}
+.marquee-slide .img-slot:hover { transform: translateY(-4px); }
+@keyframes journey-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+/* ============================================================
+   Live
+   ============================================================ */
 .live {
   background: radial-gradient(120% 100% at 50% 0%, var(--c-hero-bg-2), var(--c-hero-bg) 70%);
   color: var(--c-hero-fg);
 }
-.live .section-head h2 { color: #fff; }
+.live .section-head h2 { color: #f4e7cf; }
 .live .eyebrow { color: var(--c-hero-gold); }
 .live-card {
   max-width: 620px; margin: 0 auto; text-align: center;
   border: 1px solid rgba(227,189,106,.32); border-radius: var(--r-lg);
   background: rgba(255,255,255,.03); padding: clamp(34px, 5vw, 52px);
+  position: relative;
 }
 .live-badge {
   display: inline-flex; align-items: center; gap: 10px;
@@ -415,12 +584,12 @@ section { position: relative; }
 }
 @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
 @keyframes livepulse {
-  0%   { box-shadow: 0 0 0 0 rgba(224,86,63,.6); }
+  0%   { box-shadow: 0 0 0 0   rgba(224,86,63,.6); }
   70%  { box-shadow: 0 0 0 14px rgba(224,86,63,0); }
-  100% { box-shadow: 0 0 0 0 rgba(224,86,63,0); }
+  100% { box-shadow: 0 0 0 0   rgba(224,86,63,0); }
 }
 .live-now   { font-family: var(--font-label); letter-spacing: .2em; text-transform: uppercase; font-size: 13px; color: var(--c-hero-gold); }
-.live-title { font-family: var(--font-display); font-size: clamp(32px, 6vw, 52px); color: #fff; margin: 8px 0 6px; font-weight: 600; }
+.live-title { font-family: var(--font-display); font-size: clamp(32px, 6vw, 52px); color: #f4e7cf; margin: 8px 0 6px; font-weight: 600; }
 .live-meta  { font-style: italic; color: var(--c-hero-fg); opacity: .85; font-family: var(--font-display); font-size: 20px; }
 .live-hint  { font-size: 14px; color: var(--c-hero-gold); opacity: .7; margin-top: 22px; font-style: italic; }
 .live-progress { display: flex; gap: 6px; justify-content: center; margin-top: 24px; }
@@ -428,7 +597,9 @@ section { position: relative; }
 .live-progress span.done { background: var(--c-hero-gold); }
 .live-progress span.cur  { background: #e0563f; }
 
-/* â”€â”€ Team â”€â”€ */
+/* ============================================================
+   Team
+   ============================================================ */
 .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 @media (max-width: 760px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 460px) { .team-grid { grid-template-columns: 1fr; } }
@@ -446,7 +617,6 @@ section { position: relative; }
   margin-top: 6px; font-weight: 600; line-height: 1.2;
 }
 .team-card .name .hon { color: var(--c-ink-soft); font-size: 16px; font-style: italic; display: block; }
-
 .team-card .bio-toggle {
   display: inline-flex; align-items: center; gap: 5px;
   margin-top: 14px; background: none; border: none; cursor: pointer; padding: 0;
@@ -457,10 +627,7 @@ section { position: relative; }
 .team-card .bio-toggle:hover { color: var(--c-maroon); }
 .team-card .bio-toggle svg { transition: transform .3s var(--ease); flex-shrink: 0; }
 .team-card .bio-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-.team-card .bio-body {
-  max-height: 0; overflow: hidden;
-  transition: max-height .5s var(--ease);
-}
+.team-card .bio-body { max-height: 0; overflow: hidden; transition: max-height .5s var(--ease); }
 .team-card .bio-body.open { max-height: 2000px; }
 .team-card .bio-body p {
   font-family: var(--font-body); font-size: 15px; line-height: 1.75;
@@ -468,7 +635,11 @@ section { position: relative; }
 }
 
 .credits-head { text-align: center; margin: clamp(48px, 7vw, 80px) 0 30px; }
-.credits-head h3 { font-family: var(--font-display); font-size: clamp(26px, 4vw, 38px); color: var(--c-maroon); }
+.credits-head h3 {
+  font-family: var(--font-name); font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+  font-size: clamp(20px, 3vw, 30px); color: var(--c-maroon);
+}
+html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 .credits-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 12px 24px; max-width: 900px; margin: 0 auto;
@@ -477,7 +648,9 @@ section { position: relative; }
 .credit .role { font-family: var(--font-label); letter-spacing: .16em; text-transform: uppercase; font-size: 11px; color: var(--c-gold); font-weight: 600; }
 .credit .name { font-family: var(--font-display); font-size: 19px; color: var(--c-ink); }
 
-/* â”€â”€ Footer â”€â”€ */
+/* ============================================================
+   Footer
+   ============================================================ */
 .footer {
   background: var(--c-maroon-deep); color: var(--c-hero-fg);
   text-align: center; padding: clamp(48px, 7vw, 76px) 0;
@@ -494,18 +667,20 @@ section { position: relative; }
   color: var(--c-hero-gold); opacity: .65; letter-spacing: .2em;
   text-transform: uppercase; margin-top: 10px;
 }
+.footer .credit-line { font-size: 13px; color: var(--c-hero-gold); opacity: .6; margin-top: 26px; letter-spacing: .04em; }
 
-/* â”€â”€ Scroll reveal â”€â”€ */
+/* ============================================================
+   Scroll reveal
+   ============================================================ */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
-/* â”€â”€ Image slots (replace with real <img src="..."> when photos are ready) â”€â”€ */
+/* ============================================================
+   Image slots (real photos via <img> tags)
+   ============================================================ */
 .img-slot {
-  position: relative;
-  display: block;
-  width: 100%;
-  overflow: hidden;
+  position: relative; display: block; width: 100%; overflow: hidden;
   background: rgba(227,189,106,.06);
 }
 .img-slot img {
@@ -513,57 +688,15 @@ section { position: relative; }
   width: 100%; height: 100%;
   object-fit: cover; display: block;
 }
-/* ── Nested story accordion (piece 5 sub-tabs) ─── */
-.story-details {
-  margin: 18px 0 6px;
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-md);
-  background: rgba(247,239,224,.5);
-  overflow: hidden;
-}
-.story-summary {
-  cursor: pointer;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 13px 20px;
-  font-family: var(--font-label);
-  font-size: 11.5px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--c-maroon);
-  user-select: none;
-}
-.story-summary::-webkit-details-marker { display: none; }
-.story-summary::after {
-  content: '+';
-  font-size: 18px;
-  font-family: var(--font-display);
-  color: var(--c-gold);
-  line-height: 1;
-  flex-shrink: 0;
-}
-.story-details[open] .story-summary {
-  border-bottom: 1px solid var(--c-line);
-}
-.story-details[open] .story-summary::after { content: '\2212'; }
-.story-body { padding: 16px 20px 20px; }
-.story-body p {
-  font-size: 15px;
-  line-height: 1.78;
-  color: var(--c-ink);
-  margin: 0;
-}
 </style>
 </head>
-<body>
+<body class="ornament-some">
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• NAV â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ NAV ============ -->
 <nav class="nav" id="nav">
   <div class="container">
     <a class="brand" href="#home">
-      <span class="brand-star">✦</span>
+      <span class="brand-star">&#10022;</span>
       Nruthyasammohana
     </a>
     <button class="menu-btn" id="menuBtn" aria-label="Menu">
@@ -584,11 +717,11 @@ section { position: relative; }
   </div>
 </nav>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HERO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ HERO ============ -->
 <header class="hero" id="home">
   <div class="container">
     <p class="eyebrow">Bharatanatyam Arangetram</p>
-    <p class="hero-deva">नृत्यसम्मोहन</p>
+    <p class="hero-deva">&#2344;&#2371;&#2340;&#2381;&#2351;&#2360;&#2350;&#2381;&#2350;&#2379;&#2361;&#2344;</p>
     <h1>Nruthya<em>sammohana</em></h1>
     <p class="hero-sub">Saanvi Lalwani</p>
     <p class="hero-guru">Disciple of Dr. Raksha Kartik</p>
@@ -626,7 +759,7 @@ section { position: relative; }
     <div class="hero-gallery">
       <figure>
         <div class="img-slot g-short">
-          <img src="./guru.jpg" alt="The Guru — Dr. Raksha Kartik">
+          <img src="./guru.jpg" alt="Acharya Dr. Raksha Karthik">
         </div>
         <figcaption>Acharya Dr Raksha Karthik</figcaption>
       </figure>
@@ -646,57 +779,64 @@ section { position: relative; }
   </div>
 </header>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• INFO PANELS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ NATANAM / INFO CARDS ============ -->
 <section class="section alt" id="natanam">
   <div class="container">
+    <div class="info-stack">
 
-    <div class="info-panels">
-
-      <!-- â‘  Natanam Institute of Dance -->
-      <div class="info-panel">
-        <button class="info-panel-head" aria-expanded="false" data-info-toggle>
-          Natanam Institute of Dance
-          <svg class="ip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+      <!-- Natanam Institute of Dance -->
+      <div class="info-card">
+        <button class="info-head" aria-expanded="false">
+          <h3>Natanam Institute of Dance</h3>
+          <span class="info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
         </button>
-        <div class="info-panel-body">
-          <div class="info-panel-inner">
-            <div class="read">
-              <p>Natanam was founded with a vision to serve people and educate them in all art forms. The Institute of Dance was founded and is led by <em>Dr Smt Raksha Karthik</em>. Our vision is to introduce the future generation to the ancient and beautiful dance form of Bharatanatyam, music and mythology.</p>
-              <p>The Institute is committed to the time-tested ancient tradition of teaching, practice and performance, simultaneously exploring interpretations of the dance form. Natanam Foundation for Arts has been acclaimed for its efforts and has been appreciated highly by many people and organisations, and has also been invited to perform at many events. Students from the Institute have garnered awards and appreciations at various competitions.</p>
-              <p>Natanam has also been accredited by the <em>International Dance Council — CID</em>, the official umbrella organisation for all forms of dance in all countries, and a part of UNESCO.</p>
+        <div class="info-body">
+          <div class="info-inner">
+            <p class="drop">Natanam was founded with a vision to serve people and educate them in all art forms. The Institute of Dance was founded and is led by <em>Dr Smt Raksha Karthik</em>. Our vision is to introduce the future generation to the ancient and beautiful dance form of Bharatanatyam, music and mythology.</p>
+            <p>The Institute is committed to the time-tested ancient tradition of teaching, practice and performance, simultaneously exploring interpretations of the dance form. Natanam Foundation for Arts has been acclaimed for its efforts and has been appreciated highly by many people and organisations, and has also been invited to perform at many events. Students from the Institute have garnered awards and appreciations at various competitions.</p>
+            <p class="cid-line">Accredited by the International Dance Council &mdash; CID &middot; UNESCO</p>
+            <div class="collapse-row">
+              <button class="collapse-btn" type="button" aria-label="Collapse section" title="Collapse">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- â‘¡ What is an Arangetram? -->
-      <div class="info-panel" id="about">
-        <button class="info-panel-head" aria-expanded="false" data-info-toggle>
-          What is an Arangetram?
-          <svg class="ip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+      <!-- What is an Arangetram? -->
+      <div class="info-card" id="about">
+        <button class="info-head" aria-expanded="false">
+          <h3>What is an Arangetram?</h3>
+          <span class="info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
         </button>
-        <div class="info-panel-body">
-          <div class="info-panel-inner">
-            <div class="read">
-              <p>An Arangetram — from the Tamil words <em>arangam</em> (stage) and <em>etram</em> (ascending) — is the formal debut recital of a Bharatanatyam dancer. It is the moment a student ascends the stage for the very first time as a solo artist, presenting a complete Margam before an audience, after years of rigorous training under a Guru.</p>
-              <p>More than a performance, the Arangetram is a rite of passage — a sacred ceremony that marks the transition from student to artist. It is an act of deep gratitude: to the Guru who shaped every mudra and footstep, to the parents who supported the journey, to the art form passed down through generations, and to the divine who animates it all.</p>
-              <p>The tradition is ancient, rooted in the temple-dance lineage where a dancer's debut was offered as a gift to the presiding deity. Today it continues as one of the most significant milestones in the life of a classical dancer — a lifelong memory of the first time the stage became home.</p>
-              <p><em>Saanvi has trained for over eight years under the guidance of Dr. Raksha Kartik, and today she offers this recital with devotion, humility, and joy.</em></p>
+        <div class="info-body">
+          <div class="info-inner">
+            <p>An Arangetram &mdash; from the Tamil words <em>arangam</em> (stage) and <em>etram</em> (ascending) &mdash; is the formal debut recital of a Bharatanatyam dancer. It is the moment a student ascends the stage for the very first time as a solo artist, presenting a complete Margam before an audience, after years of rigorous training under a Guru.</p>
+            <p>More than a performance, the Arangetram is a rite of passage &mdash; a sacred ceremony that marks the transition from student to artist. It is an act of deep gratitude: to the Guru who shaped every mudra and footstep, to the parents who supported the journey, to the art form passed down through generations, and to the divine who animates it all.</p>
+            <p>The tradition is ancient, rooted in the temple-dance lineage where a dancer's debut was offered as a gift to the presiding deity. Today it continues as one of the most significant milestones in the life of a classical dancer &mdash; a lifelong memory of the first time the stage became home.</p>
+            <p><em>Saanvi has trained for over eight years under the guidance of Dr. Raksha Kartik, and today she offers this recital with devotion, humility, and joy.</em></p>
+            <div class="collapse-row">
+              <button class="collapse-btn" type="button" aria-label="Collapse section" title="Collapse">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- â‘¢ Invite & Brochure (always visible) -->
-      <div class="info-panel info-panel-static">
-        <div class="info-panel-head" style="cursor:default">
-          Invite &amp; Brochure
-        </div>
-        <div class="info-panel-inner">
+      <!-- Invite & Brochure (always visible) -->
+      <div class="info-card static">
+        <div class="info-head static-head"><h3>Invite &amp; Brochure</h3></div>
+        <div class="info-static">
           <div class="doc-grid">
             <a class="doc-card" href="./Brochure.pdf" target="_blank" data-doc>
               <span class="ic">
@@ -707,7 +847,7 @@ section { position: relative; }
               </span>
               <span>
                 <span class="t">Event Brochure</span>
-                <span class="s">Programme &amp; details · PDF</span>
+                <span class="s">Programme &amp; details &middot; PDF</span>
               </span>
             </a>
             <a class="doc-card" href="./Invitation.pdf" target="_blank" data-doc>
@@ -719,30 +859,30 @@ section { position: relative; }
               </span>
               <span>
                 <span class="t">Invitation</span>
-                <span class="s">You are warmly invited · PDF</span>
+                <span class="s">You are warmly invited &middot; PDF</span>
               </span>
             </a>
           </div>
         </div>
       </div>
 
-    </div><!-- /info-panels -->
+    </div>
   </div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• MARGAM â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ MARGAM ============ -->
 <section class="section alt" id="margam">
   <div class="container">
     <div class="section-head">
       <p class="eyebrow">The Programme</p>
       <h2>The Margam</h2>
-      <p class="section-lead">Nine pieces, in the traditional order — from invocation to benediction. Tap any piece to read its meaning.</p>
+      <p class="section-lead">Nine pieces, in the traditional order &mdash; from invocation to benediction. Tap any piece to read its meaning.</p>
     </div>
     <div class="accordion" id="margam-acc"></div>
   </div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• JOURNEY â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ JOURNEY ============ -->
 <section class="section" id="journey">
   <div class="container">
     <div class="section-head">
@@ -752,16 +892,16 @@ section { position: relative; }
     <div class="journey-wrap">
       <div class="journey-photo">
         <div class="img-slot">
-          <img src="./youngsaanvi.jpg" alt="Saanvi — early training">
+          <img src="./youngsaanvi.jpg" alt="Saanvi &mdash; early training">
         </div>
       </div>
       <div class="journey-text">
         <p class="drop">Saanvi's love for dance began long before she started formal training. From the age of one, she would dance whenever she heard music. At three, she began learning ballet and later explored Bollywood, folk, western, and other dance forms, eagerly embracing every opportunity to perform and learn.</p>
         <p>In 2014, when she was five years old, a chance encounter introduced her to the world of Bharatanatyam. While attending a theatre class, she noticed a Bharatanatyam class taking place in the next room. The grace, rhythm, and energy of the dancers immediately captured her imagination. From that moment, Bharatanatyam became an important part of her life.</p>
-        <p>As her passion for the art form grew, Saanvi continued her training with dedication and enthusiasm. In fifth grade, she came under the guidance of Acharya Dr. Raksha Karthik, with whom she has been training ever since. Under her guru's mentorship, Bharatanatyam became more than just a dance form — it became a source of discipline, creativity, confidence, and self-expression.</p>
-        <p>One of Saanvi's most memorable experiences was her first Bharatanatyam examination in sixth grade. Despite having a fractured arm at the time, and with the encouragement of Acharya Dr. Raksha Karthik, she went on to secure a distinction — a milestone that strengthened her resolve. From seventh grade onwards, dance opened doors to new experiences, new compositions, and lasting friendships with fellow dancers.</p>
+        <p>As her passion for the art form grew, Saanvi continued her training with dedication and enthusiasm. In fifth grade, she came under the guidance of Acharya Dr. Raksha Karthik, with whom she has been training ever since. Under her guru's mentorship, Bharatanatyam became more than just a dance form &mdash; it became a source of discipline, creativity, confidence, and self-expression.</p>
+        <p>One of Saanvi's most memorable experiences was her first Bharatanatyam examination in sixth grade. Despite having a fractured arm at the time, and with the encouragement of Acharya Dr. Raksha Karthik, she went on to secure a distinction &mdash; a milestone that strengthened her resolve. From seventh grade onwards, dance opened doors to new experiences, new compositions, and lasting friendships with fellow dancers.</p>
         <p>Today, Saanvi is an enthusiastic Grade 11 student at National Public School. She completed her <em>Gejje Pooje</em> on 29th April 2023 and has successfully completed the advanced-level Visharada Prathama examination. Beyond dance, she pursues Carnatic music, art, calisthenics, running, and trekking.</p>
-        <p>She remains deeply grateful for the guidance of her gurus — beginning with Guru Smitha Hegde, who first introduced her to Bharatanatyam, and continuing with Acharya Dr. Raksha Karthik — and for the unwavering support of her family and all who have walked this path with her.</p>
+        <p>She remains deeply grateful for the guidance of her gurus &mdash; beginning with Guru Smitha Hegde, who first introduced her to Bharatanatyam, and continuing with Acharya Dr. Raksha Karthik &mdash; and for the unwavering support of her family and all who have walked this path with her.</p>
         <div class="journey-stats">
           <div class="st"><div class="n">12+</div><div class="l">Years of dance</div></div>
           <div class="st"><div class="n">9</div><div class="l">Pieces in the Margam</div></div>
@@ -769,10 +909,28 @@ section { position: relative; }
         </div>
       </div>
     </div>
+
+    <!-- Auto-scrolling photo marquee -->
+    <div class="journey-marquee-wrap">
+      <p class="film-eyebrow">Twelve years, in pictures</p>
+      <div class="marquee">
+        <div class="marquee-track" id="journeyMarquee">
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+          <div class="marquee-slide"><div class="img-slot"></div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LIVE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ LIVE ============ -->
 <section class="section live" id="live">
   <div class="container">
     <div class="section-head">
@@ -784,20 +942,20 @@ section { position: relative; }
       <div class="live-badge"><span class="live-dot"></span> Live</div>
       <div class="live-now"  id="liveNow">Welcome</div>
       <div class="live-title" id="liveTitle">The recital will begin shortly</div>
-      <div class="live-meta"  id="liveMeta">Please be seated · phones on silent</div>
+      <div class="live-meta"  id="liveMeta">Please be seated &middot; phones on silent</div>
       <div class="live-progress" id="liveProgress"></div>
-      <p class="live-hint">This page updates itself — no need to refresh.</p>
+      <p class="live-hint">This page updates itself &mdash; no need to refresh.</p>
     </div>
   </div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• TEAM â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ TEAM ============ -->
 <section class="section alt" id="team">
   <div class="container">
     <div class="section-head">
       <p class="eyebrow">The Ensemble</p>
       <h2>The Team</h2>
-      <p class="section-lead">A live orchestra accompanies every Margam — the artists who give the dance its voice and pulse.</p>
+      <p class="section-lead">A live orchestra accompanies every Margam &mdash; the artists who give the dance its voice and pulse.</p>
     </div>
     <div class="team-grid" id="ensemble"></div>
 
@@ -813,11 +971,11 @@ section { position: relative; }
   </div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• FOOTER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ============ FOOTER ============ -->
 <footer class="footer">
   <div class="container">
-    <div class="deva">मङ्गलं</div>
-    <p class="om">With folded hands and a grateful heart — to the Divine, the Guru, our parents and family, and to you, our cherished guests.</p>
+    <div class="deva">&#2478;&#2434;&#2455;&#2354;&#2306;</div>
+    <p class="om">With folded hands and a grateful heart &mdash; to the Divine, the Guru, our parents and family, and to you, our cherished guests.</p>
     <div class="footer-title">Nruthyasammohana</div>
     <div class="footer-sub">A Bharatanatyam Arangetram</div>
   </div>
@@ -827,13 +985,13 @@ section { position: relative; }
 (function () {
   "use strict";
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     DATA  (from data.js)
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ============================================================
+     DATA
+     ============================================================ */
   var MARGAM = [
     {
-      n: 1, title: "Pushpanjali & Shloka", kind: "Opening Invocation",
-      meta: "Ragam Nattai · Talam Adi · Composer Rajarathnam Pillai",
+      n: 1, title: "Pushpanjali &amp; Shloka", kind: "Opening Invocation",
+      meta: "Ragam Nattai &middot; Talam Adi &middot; Composer Rajarathnam Pillai",
       body: [
         "Pushpanjali, meaning &ldquo;offering of flowers,&rdquo; is the traditional opening piece of the Bharatanatyam Margam and marks the commencement of the recital. Through this sacred invocation, the dancer offers flowers with devotion and reverence to Lord Nataraja and seeks the blessings of Bhoomi Devi for strength and grace. She also pays homage to her guru, parents, the orchestra, and the audience, whose presence and support complete the artistic journey.",
         "The dancer further invokes the blessings of Lord Narayana through an excerpt from the Narayana Upanishad, which proclaims the omnipresence and eternal nature of the Divine.",
@@ -842,33 +1000,33 @@ section { position: relative; }
     },
     {
       n: 2, title: "Gaiye Ganapathi Jagvandan", kind: "Devotional Piece",
-      meta: "Ragam Yaman · Talam Aadi · Composer Sant Tulsidas",
+      meta: "Ragam Yaman &middot; Talam Aadi &middot; Composer Sant Tulsidas",
       body: [
         "This composition is a devotional hymn in praise of Lord Ganesha, who is worshipped as the remover of obstacles and the giver of wisdom and prosperity. The song describes him as the beloved son of Lord Shiva and Goddess Parvati, the elephant-faced Vinayaka, and an ocean of mercy and knowledge. It also praises him as the bestower of intelligence, joy, and auspiciousness, while referring to his fondness for modakas. Through this piece, the poet Tulsidas offers his prayers and salutations to Lord Ganesha, seeking his blessings before beginning the journey of devotion and art.",
-        "During the passage <em>&ldquo;Siddhi Sadan Gajavadana Vinayaka,&rdquo;</em> the dancer depicts the story of Ganesha’s origin. Goddess Parvati creates a young boy and appoints him to guard her chamber. When Lord Shiva attempts to enter, the boy refuses him passage. Angered by his defiance, Shiva severs the boy’s head. Upon learning that the child is Parvati’s son, he is filled with remorse and instructs his attendants to bring the head of the first living being found facing east. They return with the head of an elephant, which Shiva places upon the boy, restoring him to life as Gajavadana—the elephant-faced Lord Ganesha."
+        "During the passage <em>&ldquo;Siddhi Sadan Gajavadana Vinayaka,&rdquo;</em> the dancer depicts the story of Ganesha's origin. Goddess Parvati creates a young boy and appoints him to guard her chamber. When Lord Shiva attempts to enter, the boy refuses him passage. Angered by his defiance, Shiva severs the boy's head. Upon learning that the child is Parvati's son, he is filled with remorse and instructs his attendants to bring the head of the first living being found facing east. They return with the head of an elephant, which Shiva places upon the boy, restoring him to life as Gajavadana&mdash;the elephant-faced Lord Ganesha."
       ]
     },
     {
       n: 3, title: "Nada Tanumanisham Shankaram", kind: "Invocation",
-      meta: "Ragam Chittaranjani · Talam Aadi · Composer Saint Thyagaraja",
+      meta: "Ragam Chittaranjani &middot; Talam Aadi &middot; Composer Saint Thyagaraja",
       body: [
-        "This composition glorifies Lord Shiva as the embodiment of Nada—the cosmic sound from which creation itself emerges. According to tradition, the fourteen Maheshwara Sutras originated from the rhythmic beats of Shiva’s damaru during his cosmic dance, giving rise to language, music, and knowledge. These sacred syllables are often artistically woven into a jathi, symbolizing the primordial rhythm that underlies all creation.",
-        "The title <em>Nada Tanumanisham</em> means &ldquo;the One whose very form is Nada (divine sound).&rdquo; Thyagaraja expresses deep devotion, bowing physically and mentally to Shankara, who is the essence of the Sama Veda and the source of the seven musical notes—Sa, Re, Ga, Ma, Pa, Dha, Ni—believed to arise from his five faces: Sadyojatha (Earth), Vaamadeva (Water), Aghora (Fire), Tatpurusha (Air), and Eeshana (Ether/Space). These swaras form the foundation of all music and are traditionally associated with the sounds of creatures found in nature, symbolizing the inseparable connection between music, life, and the natural world.",
+        "This composition glorifies Lord Shiva as the embodiment of Nada&mdash;the cosmic sound from which creation itself emerges. According to tradition, the fourteen Maheshwara Sutras originated from the rhythmic beats of Shiva's damaru during his cosmic dance, giving rise to language, music, and knowledge. These sacred syllables are often artistically woven into a jathi, symbolizing the primordial rhythm that underlies all creation.",
+        "The title <em>Nada Tanumanisham</em> means &ldquo;the One whose very form is Nada (divine sound).&rdquo; Thyagaraja expresses deep devotion, bowing physically and mentally to Shankara, who is the essence of the Sama Veda and the source of the seven musical notes&mdash;Sa, Re, Ga, Ma, Pa, Dha, Ni&mdash;believed to arise from his five faces: Sadyojatha (Earth), Vaamadeva (Water), Aghora (Fire), Tatpurusha (Air), and Eeshana (Ether/Space). These swaras form the foundation of all music and are traditionally associated with the sounds of creatures found in nature, symbolizing the inseparable connection between music, life, and the natural world.",
         "Through this kriti, Thyagaraja portrays Shiva as the personification of divine sound and rhythm, a lover of music, the destroyer of death, and the protector of pure-hearted devotees. It is a profound celebration of the sacred origin of music and the eternal presence of Shiva within it."
       ]
     },
-        {
+    {
       n: 4, title: "Tumak Chalat Ramachandra", kind: "Bhajan",
-      meta: "Raaga: Mishra Peelu · Taala: Tishra Ekam · Composer: Sant Tulsidas",
+      meta: "Raaga: Mishra Peelu &middot; Taala: Tishra Ekam &middot; Composer: Sant Tulsidas",
       body: [
-        "Tumak Chalat Ramachandra is a beloved bhajan that celebrates the enchanting childhood of Rama through vatsalya bhava—the tender love of a mother towards her child. Sant Tulsidas paints a charming picture of Baala Rama taking tiny, playful steps through Ayodhya, His anklets ringing sweetly as He walks.",
-        "The presentation begins with a sanchari inspired by a well-known incident from the life of Tulsidas. While preparing sandalwood paste for worship, Tulsidas was approached by a radiant child who asked for a sandalwood tilaka. Captivated by the child’s divine beauty, he stood spellbound. The child then applied the paste to His own forehead and to Tulsidas before disappearing. Realizing that the child was Lord Rama Himself, Tulsidas was overwhelmed with devotion and imagined the playful form of Baala Rama delighting all of Ayodhya.",
-        "The sahitya describes little Rama’s &ldquo;ṭhumaka calata&rdquo; (toddling steps) and &ldquo;kilaki kilaki&rdquo; (joyful laughter) as He runs, falls, and is lovingly gathered into the arms of Dasharatha’s queens. Mother Kausalya gently wipes the dust from His body, comforts Him with tender words, and showers Him with affection. Tulsidas delights in Rama’s coral-red lips, sweet speech, and childlike innocence, culminating in the poet’s realization that nothing in creation can compare to the beauty and charm of Lord Rama."
+        "Tumak Chalat Ramachandra is a beloved bhajan that celebrates the enchanting childhood of Rama through vatsalya bhava&mdash;the tender love of a mother towards her child. Sant Tulsidas paints a charming picture of Baala Rama taking tiny, playful steps through Ayodhya, His anklets ringing sweetly as He walks.",
+        "The presentation begins with a sanchari inspired by a well-known incident from the life of Tulsidas. While preparing sandalwood paste for worship, Tulsidas was approached by a radiant child who asked for a sandalwood tilaka. Captivated by the child's divine beauty, he stood spellbound. The child then applied the paste to His own forehead and to Tulsidas before disappearing. Realizing that the child was Lord Rama Himself, Tulsidas was overwhelmed with devotion and imagined the playful form of Baala Rama delighting all of Ayodhya.",
+        "The sahitya describes little Rama's &ldquo;&#7789;humaka calata&rdquo; (toddling steps) and &ldquo;kilaki kilaki&rdquo; (joyful laughter) as He runs, falls, and is lovingly gathered into the arms of Dasharatha's queens. Mother Kausalya gently wipes the dust from His body, comforts Him with tender words, and showers Him with affection. Tulsidas delights in Rama's coral-red lips, sweet speech, and childlike innocence, culminating in the poet's realization that nothing in creation can compare to the beauty and charm of Lord Rama."
       ]
     },
-        {
+    {
       n: 5, title: "Maathe Malayadwaja", kind: "Daru Varna",
-      meta: "Raga: Kamas · Talam: Aadi · Composer: Muthiah Bhagavathar",
+      meta: "Raga: Kamas &middot; Talam: Aadi &middot; Composer: Muthiah Bhagavathar",
       body: [
         "This Daru Varna is dedicated to Meenakshi, an incarnation of Shakti, and showcases her multifaceted nature. The composition portrays the goddess in her various roles-both as a nurturing mother and a fierce protector.",
         "The goddess is first praised as the daughter of King Malayadhvaja Pandya, a revered warrior and devotee of Shiva. She is also honored as the mother of Lord Ganesha and Lord Subramanya, emphasizing her central role in nurturing the celestial family. The dancer depicts the birth stories of Lord Ganesha and Lord Subramanya."
@@ -887,9 +1045,9 @@ section { position: relative; }
         "Meenakshi is described as &ldquo;Shankari&rdquo; (the peaceful one), &ldquo;Chandrakaladhari&rdquo; the moon-crowned one), and &ldquo;Shatodari&rdquo; (the one with six breasts, symbolizing fertility and abundance). These peaceful forms highlight her nurturing and compassionate aspects. However, the goddess also takes on the fierce form of &ldquo;Chamundeshwari&rdquo;. the slayer of Mahishasura, symbolizing her power and ability to destroy evil. The dancer depicts the story of Mahishasura."
       ]
     },
-        {
+    {
       n: 6, title: "Pavadisu Paramatmane", kind: "Devotional Composition",
-      meta: "Raga: Ragamalika (a garland of many ragas) · Tala: Adi Tala · Composer: Purandara Dasa",
+      meta: "Raga: Ragamalika (a garland of many ragas) &middot; Tala: Adi Tala &middot; Composer: Purandara Dasa",
       body: [],
       stories: [
         { title: "Story", body: [
@@ -903,7 +1061,7 @@ section { position: relative; }
         ] }
       ]
     },
-        {
+    {
       n: 7, title: "Thiruppavai (Pasuram 24 &amp; 30)", kind: "Padam",
       meta: "Composer: Sri Andal",
       body: [],
@@ -918,9 +1076,9 @@ section { position: relative; }
         ] }
       ]
     },
-        {
+    {
       n: 8, title: "Kalinga Narthana Thillana", kind: "Thillana",
-      meta: "Ragam: Gambheera Nata · Talam: Aadi · Composer: Oothukadu Venkata Subba Iyer",
+      meta: "Ragam: Gambheera Nata &middot; Talam: Aadi &middot; Composer: Oothukadu Venkata Subba Iyer",
       body: [
         "Thillana is the finale presentation in the Bharatanatyam margam. It is a nritta piece with fast-paced movements that go along with the rhythm and music.",
         "&ldquo;Kalinga Narthana&rdquo; literally means &ldquo;Kalinga Dance&rdquo; in Sanskrit, and it refers to a popular mythological story in which the god Krishna, as a young boy, danced on the serpent Kalinga to stop him from poisoning the Yamuna River.",
@@ -929,9 +1087,9 @@ section { position: relative; }
         "Oothukadu Venkata Kavi had even set the singing style in such a way that, at one place, a particular word is enunciated to resemble the hissing sound made by the great serpent. He has liberally used gati-bhedam, where jatis (rhythmic syllables) and lyrics intermingle, thereby giving a dramatic and striking effect of the rapid and cadenced foot movements and adroit swings of the dancing Lord."
       ]
     },
-        {
+    {
       n: 9, title: "Mangalam – Achyutam Keshavam", kind: "Closing Mangalam",
-      meta: "Raga: Yaman kalyani · Tala: Adi · Composer: Traditional",
+      meta: "Raga: Yaman kalyani &middot; Tala: Adi &middot; Composer: Traditional",
       body: [
         "Achyutam Keshavam is a devotional composition that glorifies the Lord through His many divine names such as Achyuta, Keshava, Krishna, Damodara, Rama, and Narayana, expressing love, devotion, and surrender.",
         "The Mangalam is the concluding presentation in the Bharatanatyam Margam, marking the successful completion of the performance. Through this concluding piece, the dancer offers gratitude to the Supreme Lord for His blessings and guidance. It is also a heartfelt expression of thanks to the Guru, the accompanying musicians, parents, and the audience whose support and encouragement have made the journey meaningful."
@@ -944,7 +1102,7 @@ section { position: relative; }
       bio: [
         "Dr. Smt Raksha Karthik, is a Consultant Dental Surgeon &amp; Bharatanatyam Guru / Artist and choreographer from Bangalore, India. She is accredited by the International Dance Council- CID, and is recognised by UNESCO. She also is a member of the American Dance Therapy Association. Dr. Raksha Karthik, an exponent of Vazhuvoor style of Bharatanatyam started learning the art of dancing at the age of seven. She has been trained by Guru Kum. Bhanumathi &amp; Guru Sheela Chadrasekhar at\nNrityakalaMandiram. She also teaches dance to the visually and audio/speech impaired from the last 9 years. Being one of the teachers of Bharatanatyam to the visually impaired and audio/speech impaired, she believes that art is universal.",
         "A dental surgeon by profession and artist by passion, she is truly living her passion.",
-        "Raksha has to her credit many solo/group dance performances too and has also traveled on many national/ international performances. She is also a graded artist in Doordarshan. She has been awarded the ‘Acharya Devo Bhava plaque of honor for vocational service by Rotary Bangalore South West, Pandit Bhimsen Joshi Memorial\n*Yuva Kala Guru Satkar State Award, Sri Jaydev Samarooh ‘Padmavati Pratibha Puraskar’ and honored with the Title ‘Karunada Lalithakalaa Thilaka’ for her contributions in the field of Bharatanatyam."
+        "Raksha has to her credit many solo/group dance performances too and has also traveled on many national/ international performances. She is also a graded artist in Doordarshan. She has been awarded the 'Acharya Devo Bhava plaque of honor for vocational service by Rotary Bangalore South West, Pandit Bhimsen Joshi Memorial\n*Yuva Kala Guru Satkar State Award, Sri Jaydev Samarooh 'Padmavati Pratibha Puraskar' and honored with the Title 'Karunada Lalithakalaa Thilaka' for her contributions in the field of Bharatanatyam."
       ]
     },
     { role: "Vocal",        name: "Vidwan Shri Balasubramanya Sharma" },
@@ -958,14 +1116,14 @@ section { position: relative; }
     { role: "Event Design",             name: "Shri Karthik Kittu" },
     { role: "Makeup",                   name: "Shri Vimal Kanakaraj" },
     { role: "Costume",                  name: "Shri Armugam" },
-    { role: "Lighting",                 name: "Shri ‘Belaku’ Nagaraj Marihonnaiah" },
+    { role: "Lighting",                 name: "Shri 'Belaku' Nagaraj Marihonnaiah" },
     { role: "Invitation Design",        name: "Smt. Vandana Sanklecha" },
-    { role: "Photography &amp; Video",  name: "Shri Madhukar · Universal Rasikas" }
+    { role: "Photography &amp; Video",  name: "Shri Madhukar &middot; Universal Rasikas" }
   ];
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     MARGAM ACCORDION  (build from data)
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ============================================================
+     MARGAM ACCORDION
+     ============================================================ */
   var acc = document.getElementById("margam-acc");
   MARGAM.forEach(function (p) {
     var item = document.createElement("div");
@@ -990,12 +1148,16 @@ section { position: relative; }
       bodyHtml += p.body2.map(function (para) { return "<p>" + para + "</p>"; }).join("");
     }
 
+    var collapseSvg =
+      "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7'>" +
+      "<line x1='6' y1='6' x2='18' y2='18'/><line x1='18' y1='6' x2='6' y2='18'/></svg>";
+
     item.innerHTML =
       "<button class='acc-head' aria-expanded='false'>" +
         "<span class='acc-num'>" + String(p.n).padStart(2, "0") + "</span>" +
         "<span class='acc-title'>" +
           "<span class='t'>" + p.title + "</span>" +
-          "<span class='meta'>" + p.kind + " &middot; " + p.meta + "</span>" +
+          "<span class='meta'>" + (p.kind ? p.kind + " &middot; " : "") + p.meta + "</span>" +
         "</span>" +
         "<span class='acc-icon'>" +
           "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6'>" +
@@ -1003,40 +1165,100 @@ section { position: relative; }
           "</svg>" +
         "</span>" +
       "</button>" +
-      "<div class='acc-body'><div class='acc-body-inner'>" + bodyHtml + "</div></div>";
+      "<div class='acc-body'><div class='acc-body-inner'>" + bodyHtml +
+        "<div class='collapse-row'><button class='collapse-btn' type='button' aria-label='Collapse this piece' title='Collapse'>" +
+          collapseSvg +
+        "</button></div>" +
+      "</div></div>";
 
     acc.appendChild(item);
   });
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     ACCORDION BEHAVIOUR
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  acc.querySelectorAll(".acc-head").forEach(function (head) {
-    head.addEventListener("click", function () {
-      var item  = head.parentElement;
-      var body  = item.querySelector(".acc-body");
-      var isOpen = item.classList.contains("open");
+  /* ---- Accordion behaviour ---- */
+  function wireAccordion(root) {
+    function closeItem(item, opts) {
+      var head = item.querySelector(".acc-head");
+      var body = item.querySelector(".acc-body");
+      body.style.maxHeight = body.scrollHeight + "px";
+      requestAnimationFrame(function () { body.style.maxHeight = "0px"; });
+      item.classList.remove("open");
+      if (head) head.setAttribute("aria-expanded", "false");
+      if (opts && opts.scroll && head) {
+        var navH = 64;
+        var y = head.getBoundingClientRect().top + window.scrollY - navH - 12;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+    function openItem(item) {
+      var head = item.querySelector(".acc-head");
+      var body = item.querySelector(".acc-body");
+      item.classList.add("open");
+      if (head) head.setAttribute("aria-expanded", "true");
+      body.style.maxHeight = body.scrollHeight + "px";
+      body.addEventListener("transitionend", function te() {
+        if (item.classList.contains("open")) body.style.maxHeight = "none";
+        body.removeEventListener("transitionend", te);
+      });
+    }
+    root.querySelectorAll(".acc-head").forEach(function (head) {
+      head.addEventListener("click", function () {
+        var item = head.parentElement;
+        if (item.classList.contains("open")) closeItem(item);
+        else openItem(item);
+      });
+    });
+    root.querySelectorAll(".collapse-btn").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var item = btn.closest(".acc-item");
+        if (item) closeItem(item, { scroll: true });
+      });
+    });
+  }
+  wireAccordion(acc);
 
-      if (isOpen) {
-        body.style.maxHeight = body.scrollHeight + "px";
-        requestAnimationFrame(function () { body.style.maxHeight = "0"; });
-        item.classList.remove("open");
-        head.setAttribute("aria-expanded", "false");
-      } else {
-        item.classList.add("open");
+  /* ============================================================
+     INFO CARDS (Natanam / Arangetram / Invite)
+     ============================================================ */
+  function wireCards(root) {
+    root.querySelectorAll(".info-card").forEach(function (card) {
+      var head = card.querySelector(".info-head");
+      if (!head || head.classList.contains("static-head")) return;
+      var body = card.querySelector(".info-body");
+      function openCard() {
+        card.classList.add("open");
         head.setAttribute("aria-expanded", "true");
         body.style.maxHeight = body.scrollHeight + "px";
         body.addEventListener("transitionend", function te() {
-          if (item.classList.contains("open")) body.style.maxHeight = "none";
+          if (card.classList.contains("open")) body.style.maxHeight = "none";
           body.removeEventListener("transitionend", te);
         });
       }
+      function closeCard(scroll) {
+        body.style.maxHeight = body.scrollHeight + "px";
+        requestAnimationFrame(function () { body.style.maxHeight = "0px"; });
+        card.classList.remove("open");
+        head.setAttribute("aria-expanded", "false");
+        if (scroll) {
+          var y = head.getBoundingClientRect().top + window.scrollY - 64 - 12;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }
+      head.addEventListener("click", function () {
+        if (card.classList.contains("open")) closeCard(false); else openCard();
+      });
+      var cbtn = card.querySelector(".collapse-btn");
+      if (cbtn) cbtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        closeCard(true);
+      });
     });
-  });
+  }
+  wireCards(document);
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  /* ============================================================
      ENSEMBLE & CREDITS
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+     ============================================================ */
   var ens = document.getElementById("ensemble");
   ENSEMBLE.forEach(function (m) {
     var c = document.createElement("div");
@@ -1065,21 +1287,9 @@ section { position: relative; }
     cr.appendChild(c);
   });
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     INFO PANEL TOGGLES
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  document.querySelectorAll("[data-info-toggle]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var expanded = btn.getAttribute("aria-expanded") === "true";
-      var body = btn.nextElementSibling;
-      btn.setAttribute("aria-expanded", !expanded);
-      body.classList.toggle("open", !expanded);
-    });
-  });
-
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     BIO TOGGLES (team card expandable biography)
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ============================================================
+     BIO TOGGLE (team card expandable biography)
+     ============================================================ */
   document.querySelectorAll("[data-bio-toggle]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var expanded = btn.getAttribute("aria-expanded") === "true";
@@ -1090,9 +1300,22 @@ section { position: relative; }
     });
   });
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  /* ============================================================
+     JOURNEY MARQUEE — duplicate slides for seamless loop
+     ============================================================ */
+  var marquee = document.getElementById("journeyMarquee");
+  if (marquee) {
+    var originals = Array.prototype.slice.call(marquee.children);
+    originals.forEach(function (node) {
+      var clone = node.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      marquee.appendChild(clone);
+    });
+  }
+
+  /* ============================================================
      MOBILE MENU
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+     ============================================================ */
   var nav      = document.getElementById("nav");
   var menuBtn  = document.getElementById("menuBtn");
   var navLinks = document.getElementById("navLinks");
@@ -1101,9 +1324,9 @@ section { position: relative; }
     if (e.target.tagName === "A") nav.classList.remove("menu-open");
   });
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  /* ============================================================
      SCROLLSPY
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+     ============================================================ */
   var sections = ["home", "natanam", "margam", "journey", "live", "team"]
     .map(function (id) { return document.getElementById(id); })
     .filter(Boolean);
@@ -1124,11 +1347,11 @@ section { position: relative; }
   }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
   sections.forEach(function (s) { spy.observe(s); });
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  /* ============================================================
      SCROLL REVEAL
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+     ============================================================ */
   var revealEls = document.querySelectorAll(
-    ".section-head, .read, .doc-grid, .journey-wrap, .team-card, .credit, .live-card, .hero-gallery"
+    ".section-head, .journey-wrap, .team-card, .credit, .live-card, .hero-gallery"
   );
   revealEls.forEach(function (el) { el.classList.add("reveal"); });
   var ro = new IntersectionObserver(function (entries) {
@@ -1138,10 +1361,9 @@ section { position: relative; }
   }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
   revealEls.forEach(function (el) { ro.observe(el); });
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     LIVE FEED — demo loop (auto-cycles through the Margam)
-     Replaced by Firebase data when available in production.
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ============================================================
+     LIVE FEED — demo loop
+     ============================================================ */
   var liveNow   = document.getElementById("liveNow");
   var liveTitle = document.getElementById("liveTitle");
   var liveMeta  = document.getElementById("liveMeta");
@@ -1155,7 +1377,7 @@ section { position: relative; }
         meta:  p.kind + " · " + p.meta
       };
     }))
-    .concat([{ now: "Thank you", title: "Åšubhamastu", meta: "With gratitude to all who joined us this evening" }]);
+    .concat([{ now: "Thank you", title: "Śubhamastu", meta: "With gratitude to all who joined us this evening" }]);
 
   MARGAM.forEach(function () {
     var s = document.createElement("span");
@@ -1179,7 +1401,7 @@ section { position: relative; }
       });
       dots.forEach(function (d, i) {
         d.classList.remove("cur", "done");
-        if (idx - 1 > i)      d.classList.add("done");
+        if (idx - 1 > i)       d.classList.add("done");
         else if (idx - 1 === i) d.classList.add("cur");
       });
       if (idx > MARGAM.length) dots.forEach(function (d) { d.classList.add("done"); d.classList.remove("cur"); });
@@ -1191,9 +1413,9 @@ section { position: relative; }
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!reducedMotion) { demoInterval = setInterval(renderLive, 4200); }
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     DOC CARD NUDGE (placeholder click)
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ============================================================
+     DOC CARD NUDGE
+     ============================================================ */
   document.querySelectorAll("[data-doc]").forEach(function (a) {
     a.addEventListener("click", function (e) {
       var href = a.getAttribute("href");
@@ -1205,18 +1427,11 @@ section { position: relative; }
     });
   });
 
-  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  /* ============================================================
      FIREBASE LIVE INTEGRATION
-     Update 'current_sentence' in your Realtime Database to
-     push live stage updates. The demo loop stops automatically
-     when real data arrives.
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+     ============================================================ */
   try {
     var firebaseConfig = {
-      // Add your full Firebase config here:
-      // apiKey: "YOUR_API_KEY",
-      // authDomain: "YOUR_PROJECT.firebaseapp.com",
-      // projectId: "YOUR_PROJECT",
       databaseURL: "https://my-arangetram-default-rtdb.asia-southeast1.firebasedatabase.app/"
     };
     if (!firebase.apps || !firebase.apps.length) {
@@ -1240,11 +1455,10 @@ section { position: relative; }
       }
     });
   } catch (e) {
-    // Firebase not yet configured — demo loop runs instead
+    // Firebase not yet configured
   }
 
 })();
 </script>
 </body>
 </html>
-
