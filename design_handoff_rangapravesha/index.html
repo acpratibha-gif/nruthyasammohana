@@ -543,6 +543,9 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
 .marquee-track {
   display: flex; flex-wrap: nowrap; width: max-content;
   animation: journey-marquee 10s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-slide { flex: 0 0 auto; margin-right: 22px; }
@@ -562,8 +565,8 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
 }
 .marquee-slide .img-slot:hover { transform: translateY(-4px); transition: transform .4s var(--ease); }
 @keyframes journey-marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation-duration: 120s; }
