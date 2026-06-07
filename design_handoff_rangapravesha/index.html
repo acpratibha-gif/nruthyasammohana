@@ -534,9 +534,8 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
   mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
 .marquee-track {
-  display: flex; width: max-content;
-  animation: journey-marquee 64s linear infinite;
-  will-change: transform;
+  display: flex; flex-wrap: nowrap;
+  animation: journey-marquee 35s linear infinite;
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-slide { flex: 0 0 auto; margin-right: 22px; }
@@ -546,16 +545,21 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
   border-radius: 8px;
   border: 1px solid var(--c-gold-soft);
   box-shadow: 0 0 0 5px var(--c-surface), 0 12px 28px rgba(110,16,35,.14);
-  transition: transform .4s var(--ease);
   background: rgba(227,189,106,.06);
+  overflow: hidden;
 }
-.marquee-slide .img-slot:hover { transform: translateY(-4px); }
+.marquee-slide .img-slot img {
+  position: relative !important;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.marquee-slide .img-slot:hover { transform: translateY(-4px); transition: transform .4s var(--ease); }
 @keyframes journey-marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
+  .marquee-track { animation-duration: 120s; }
 }
 
 /* ============================================================
