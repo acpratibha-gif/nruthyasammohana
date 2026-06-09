@@ -299,6 +299,12 @@ body.ornament-min .hero::before { display: none; }
   .hero-gallery .g-tall  { height: 280px; }
   .hero-gallery .g-short { height: 200px; }
 }
+@media (max-width: 480px) {
+  .hero-gallery { grid-template-columns: 1fr; gap: 12px; }
+  .hero-gallery .g-center { grid-column: 1 / -1; order: -1; }
+  .hero-gallery .g-tall  { height: clamp(260px, 80vw, 340px); }
+  .hero-gallery .g-short { height: clamp(220px, 68vw, 300px); }
+}
 
 /* ============================================================
    Buttons
