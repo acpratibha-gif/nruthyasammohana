@@ -1604,6 +1604,8 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 
   /* ============================================================
      HERO CENTRE — Ken-Burns photo slideshow
+     Waits for each image to finish loading before crossfading in,
+     and preloads the next photo while the current one is showing.
      ============================================================ */
   (function initHeroCycle() {
     var cycle = document.getElementById("heroCycle");
@@ -1627,19 +1629,45 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
     ];
     var layers = cycle.querySelectorAll(".hc-layer");
     var idx = 0, step = 0;
-    function tick(first) {
+    var loaded = {};
+
+    function preload(url) {
+      if (loaded[url]) return;
+      var img = new Image();
+      img.onload = function () { loaded[url] = true; };
+      img.src = url;
+    }
+
+    function show(url, first) {
       var incoming = layers[step % 2];
       var outgoing  = layers[(step + 1) % 2];
-      incoming.querySelector(".hc-img").style.backgroundImage =
-        'url("' + PHOTOS[idx] + '")';
+      incoming.querySelector(".hc-img").style.backgroundImage = 'url("' + url + '")';
       cycle.classList.toggle("alt", step % 2 === 1);
       incoming.classList.remove("on");
-      void incoming.offsetWidth; /* force reflow to retrigger animation */
+      void incoming.offsetWidth;
       incoming.classList.add("on");
       if (!first) outgoing.classList.remove("on");
-      idx  = (idx  + 1) % PHOTOS.length;
-      step = step + 1;
+      step++;
+      /* start loading the next photo now so it's ready in time */
+      preload(PHOTOS[idx]);
     }
+
+    function tick(first) {
+      var url = PHOTOS[idx];
+      idx = (idx + 1) % PHOTOS.length;
+      if (loaded[url]) {
+        show(url, first);
+      } else {
+        /* wait for this photo to finish downloading before showing */
+        var img = new Image();
+        img.onload = function () { loaded[url] = true; show(url, first); };
+        img.onerror = function () { loaded[url] = true; tick(first); }; /* skip broken */
+        img.src = url;
+      }
+    }
+
+    /* kick off loading the first photo immediately */
+    preload(PHOTOS[0]);
     tick(true);
     setInterval(tick, 4500);
   })();
