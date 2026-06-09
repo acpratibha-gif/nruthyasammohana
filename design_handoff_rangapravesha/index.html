@@ -255,6 +255,21 @@ body.ornament-min .hero::before { display: none; }
   .hero-cta .btn { flex: 1 1 100%; justify-content: center; }
 }
 
+/* hero centre Ken-Burns slideshow */
+.hero-cycle {
+  position: relative; overflow: hidden;
+  width: 100%; border: 1px solid rgba(227,189,106,.35);
+  box-shadow: 0 18px 50px rgba(0,0,0,.4); border-radius: 8px;
+  background: linear-gradient(150deg, #4a0f1d, #2c0810);
+}
+.hc-layer { position: absolute; inset: 0; opacity: 0; transition: opacity 1.5s var(--ease); }
+.hc-layer.on { opacity: 1; }
+.hc-img { position: absolute; inset: -2%; background: center/cover no-repeat; transform: scale(1.02); }
+.hc-layer.on .hc-img { animation: heroKB 6.5s ease-out forwards; }
+@keyframes heroKB { from { transform: scale(1.02); } to { transform: scale(1.15); } }
+.hero-cycle.alt .hc-layer.on .hc-img { animation: heroKBalt 6.5s ease-out forwards; }
+@keyframes heroKBalt { from { transform: scale(1.15) translate(1%,-1%); } to { transform: scale(1.02); } }
+
 /* hero portrait gallery */
 .hero-gallery {
   display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 16px;
@@ -820,8 +835,9 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
         <figcaption>Acharya Dr Raksha Karthik</figcaption>
       </figure>
       <figure class="g-center">
-        <div class="img-slot g-tall">
-          <img src="./saanvi.jpg" alt="Kum. Saanvi Lalwani">
+        <div class="hero-cycle g-tall" id="heroCycle">
+          <div class="hc-layer"><div class="hc-img"></div></div>
+          <div class="hc-layer"><div class="hc-img"></div></div>
         </div>
         <figcaption>Saanvi Lalwani</figcaption>
       </figure>
@@ -1585,6 +1601,48 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       }
     });
   });
+
+  /* ============================================================
+     HERO CENTRE — Ken-Burns photo slideshow
+     ============================================================ */
+  (function initHeroCycle() {
+    var cycle = document.getElementById("heroCycle");
+    if (!cycle) return;
+    var PHOTOS = [
+      "./photos/saanvi(1).jpg",
+      "./photos/saanvi(2).jpg",
+      "./photos/saanvi(3).jpg",
+      "./photos/saanvi(4).jpg",
+      "./photos/saanvi(5).jpg",
+      "./photos/saanvi(6).jpg",
+      "./photos/saanvi(7).jpg",
+      "./photos/saanvi(8).jpg",
+      "./photos/saanvi(9).jpg",
+      "./photos/saanvi(10).jpg",
+      "./photos/saanvi(11).jpg",
+      "./photos/saanvi(12).jpg",
+      "./photos/saanvi(13).jpg",
+      "./photos/saanvi(14).jpg",
+      "./photos/saanvi(15).jpg"
+    ];
+    var layers = cycle.querySelectorAll(".hc-layer");
+    var idx = 0, step = 0;
+    function tick(first) {
+      var incoming = layers[step % 2];
+      var outgoing  = layers[(step + 1) % 2];
+      incoming.querySelector(".hc-img").style.backgroundImage =
+        'url("' + PHOTOS[idx] + '")';
+      cycle.classList.toggle("alt", step % 2 === 1);
+      incoming.classList.remove("on");
+      void incoming.offsetWidth; /* force reflow to retrigger animation */
+      incoming.classList.add("on");
+      if (!first) outgoing.classList.remove("on");
+      idx  = (idx  + 1) % PHOTOS.length;
+      step = step + 1;
+    }
+    tick(true);
+    setInterval(tick, 4500);
+  })();
 
   /* ============================================================
      FIREBASE LIVE INTEGRATION
