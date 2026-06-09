@@ -255,6 +255,13 @@ body.ornament-min .hero::before { display: none; }
   .hero-cta .btn { flex: 1 1 100%; justify-content: center; }
 }
 
+/* ---- trail hint: swap text for touch devices ---- */
+.trail-hint-touch { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .trail-hint-desktop { display: none; }
+  .trail-hint-touch   { display: inline; }
+}
+
 /* hero centre Ken-Burns slideshow */
 .hero-cycle {
   position: relative; overflow: hidden;
@@ -628,6 +635,17 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
 @media (prefers-reduced-motion: reduce) {
   .trail-stage { height: clamp(360px, 50vh, 540px); }
 }
+@media (max-width: 600px) {
+  .trail-stage { height: clamp(300px, 70vw, 420px); cursor: default; }
+  .trail-img { width: clamp(110px, 28vw, 160px); }
+  .mudra-divider { padding-bottom: clamp(18px, 4vw, 36px); }
+  .acc-body-inner { padding-left: 4px; }
+  .info-head { padding: 18px 18px; }
+  .info-inner, .info-static { padding-left: 18px; padding-right: 18px; }
+  .journey-stats { gap: 24px; }
+  .journey-stats .st .n { font-size: 38px; }
+  .credits-grid { grid-template-columns: 1fr 1fr; }
+}
 
 /* ============================================================
    Live
@@ -995,7 +1013,12 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
     <!-- Cursor image-trail gallery -->
     <div class="journey-marquee-wrap">
       <p class="film-eyebrow">Twelve years, in pictures</p>
-      <p class="trail-hint"><span class="star">&#10022;</span>&nbsp; Move your cursor to relive the moments &nbsp;<span class="star">&#10022;</span></p>
+      <p class="trail-hint">
+        <span class="star">&#10022;</span>&nbsp;
+        <span class="trail-hint-desktop">Move your cursor to relive the moments</span>
+        <span class="trail-hint-touch">Tap and drag to relive the moments</span>
+        &nbsp;<span class="star">&#10022;</span>
+      </p>
       <div class="trail-stage" id="trailStage" aria-hidden="true">
         <div class="trail-watermark"><span class="wm-deva">&#2360;&#2381;&#2350;&#2371;&#2340;&#2367;</span></div>
       </div>
