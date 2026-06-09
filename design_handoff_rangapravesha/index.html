@@ -227,7 +227,7 @@ body.ornament-min .hero::before { display: none; }
   margin: 12px 0 10px; color: #f4e7cf;
   text-shadow: 0 2px 40px rgba(0,0,0,.4);
 }
-.hero h1 em { font-style: italic; color: var(--c-hero-gold); }
+.hero h1 em { font-style: normal; color: inherit; }
 .hero-sub {
   font-family: var(--font-display); font-style: italic;
   font-size: clamp(22px, 3.4vw, 34px); color: var(--c-hero-fg); margin: 10px 0 0; opacity: .92;
@@ -254,6 +254,28 @@ body.ornament-min .hero::before { display: none; }
   .hero-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
   .hero-cta .btn { flex: 1 1 100%; justify-content: center; }
 }
+
+/* ---- trail hint: swap text for touch devices ---- */
+.trail-hint-touch { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .trail-hint-desktop { display: none; }
+  .trail-hint-touch   { display: inline; }
+}
+
+/* hero centre Ken-Burns slideshow */
+.hero-cycle {
+  position: relative; overflow: hidden;
+  width: 100%; border: 1px solid rgba(227,189,106,.35);
+  box-shadow: 0 18px 50px rgba(0,0,0,.4); border-radius: 8px;
+  background: linear-gradient(150deg, #4a0f1d, #2c0810);
+}
+.hc-layer { position: absolute; inset: 0; opacity: 0; transition: opacity 1.5s var(--ease); }
+.hc-layer.on { opacity: 1; }
+.hc-img { position: absolute; inset: -2%; background: center/cover no-repeat; transform: scale(1.02); }
+.hc-layer.on .hc-img { animation: heroKB 6.5s ease-out forwards; }
+@keyframes heroKB { from { transform: scale(1.02); } to { transform: scale(1.15); } }
+.hero-cycle.alt .hc-layer.on .hc-img { animation: heroKBalt 6.5s ease-out forwards; }
+@keyframes heroKBalt { from { transform: scale(1.15) translate(1%,-1%); } to { transform: scale(1.02); } }
 
 /* hero portrait gallery */
 .hero-gallery {
@@ -504,9 +526,11 @@ html.is-dark .doc-card .ic { color: var(--c-gold-soft); }
    ============================================================ */
 .journey-wrap {
   display: grid; grid-template-columns: 0.9fr 1.1fr;
-  gap: clamp(28px, 5vw, 64px); align-items: center;
+  gap: clamp(28px, 5vw, 64px); align-items: start;
 }
 @media (max-width: 780px) { .journey-wrap { grid-template-columns: 1fr; } }
+.journey-photo { position: sticky; top: calc(var(--nav-h, 64px) + 28px); }
+@media (max-width: 780px) { .journey-photo { position: static; } }
 .journey-photo .img-slot {
   width: 100%; height: clamp(320px, 46vw, 520px); border-radius: 10px;
   border: 1px solid var(--c-line); box-shadow: 0 20px 50px rgba(110,16,35,.14);
@@ -527,41 +551,101 @@ html.is-dark .journey-text .drop::first-letter { color: var(--c-gold-soft); }
   font-size: 12px; color: var(--c-ink-soft); margin-top: 4px;
 }
 
-/* Auto-scrolling marquee gallery */
+/* ============================================================
+   Mudra section dividers (animated line-art)
+   ============================================================ */
+.mudra-divider {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(18px, 4vw, 30px); padding: 0 0 clamp(30px, 5vw, 54px);
+}
+.mudra-divider .ln {
+  height: 1px; width: clamp(38px, 9vw, 100px);
+  background: linear-gradient(90deg, transparent, var(--c-gold-soft));
+}
+.mudra-divider .ln.r { background: linear-gradient(90deg, var(--c-gold-soft), transparent); }
+.mudra-divider .mudra {
+  width: clamp(54px, 7vw, 74px); height: clamp(54px, 7vw, 74px);
+  color: var(--c-gold); flex: none;
+}
+.mudra-divider .mudra svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.mudra-divider .mudra :is(path, circle, line) {
+  fill: none; stroke: currentColor; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: var(--len, 400); stroke-dashoffset: var(--len, 400);
+  transition: stroke-dashoffset 1.9s var(--ease);
+}
+.mudra-divider .mudra.in :is(path, circle, line) { stroke-dashoffset: 0; }
+.mudra-divider.on-dark .mudra { color: var(--c-hero-gold); }
+.mudra-divider.on-dark .ln { background: linear-gradient(90deg, transparent, rgba(227,189,106,.5)); }
+.mudra-divider.on-dark .ln.r { background: linear-gradient(90deg, rgba(227,189,106,.5), transparent); }
+@media (prefers-reduced-motion: reduce) {
+  .mudra-divider .mudra :is(path, circle, line) { transition: none; stroke-dashoffset: 0; }
+}
+
+/* ============================================================
+   Cursor image-trail gallery
+   ============================================================ */
 .journey-marquee-wrap { margin-top: clamp(48px, 7vw, 78px); }
 .film-eyebrow {
   font-family: var(--font-display); font-style: italic; font-size: clamp(20px, 3vw, 27px);
-  color: var(--c-maroon); text-align: center; margin-bottom: 34px;
+  color: var(--c-maroon); text-align: center; margin-bottom: 10px;
 }
 html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
-.marquee {
+.trail-hint {
+  text-align: center; margin-bottom: 22px;
+  font-family: var(--font-label); font-size: 11.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--c-gold);
+}
+.trail-hint .star { opacity: .8; }
+.trail-stage {
   position: relative; width: 100vw; margin-left: calc(50% - 50vw);
-  overflow: hidden; padding: 10px 0;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  height: clamp(420px, 62vh, 660px);
+  overflow: hidden; cursor: crosshair;
+  touch-action: pan-y;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-.marquee-track {
-  display: flex; flex-wrap: nowrap; width: max-content;
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+.trail-watermark {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  pointer-events: none; text-align: center; transition: opacity .6s var(--ease);
 }
-.marquee-slide { flex: 0 0 auto; margin-right: 22px; }
-.marquee-slide .img-slot {
-  display: block;
-  width: clamp(188px, 22vw, 232px); height: clamp(256px, 30vw, 318px);
-  border-radius: 8px;
+.trail-watermark .wm-deva {
+  font-family: var(--font-deva, "Tiro Devanagari Sanskrit", serif);
+  font-size: clamp(40px, 9vw, 110px); color: var(--c-gold);
+  opacity: .12; line-height: 1;
+}
+.trail-stage.touched .trail-watermark { opacity: 0; }
+.trail-img {
+  position: absolute; top: 0; left: 0;
+  width: clamp(150px, 17vw, 230px); aspect-ratio: 3 / 4;
+  transform: translate(-50%, -50%) scale(.62) rotate(var(--rot, 0deg));
+  opacity: 0; pointer-events: none; will-change: transform, opacity;
+  border-radius: 8px; overflow: hidden;
   border: 1px solid var(--c-gold-soft);
-  box-shadow: 0 0 0 5px var(--c-surface), 0 12px 28px rgba(110,16,35,.14);
-  background: rgba(227,189,106,.06);
-  overflow: hidden;
+  box-shadow: 0 0 0 5px var(--c-surface), 0 18px 40px rgba(110,16,35,.22);
 }
-.marquee-slide .img-slot img {
-  position: relative !important;
-  width: 100%; height: 100%;
-  object-fit: cover; display: block;
+.trail-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.trail-img.show { animation: trail-pop 4s var(--ease) forwards; }
+@keyframes trail-pop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.62) rotate(var(--rot, 0deg)); }
+  7%   { opacity: 1; transform: translate(-50%, -50%) scale(1)   rotate(var(--rot, 0deg)); }
+  78%  { opacity: 1; transform: translate(-50%, -50%) scale(1)   rotate(var(--rot, 0deg)); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05) rotate(var(--rot, 0deg)); }
 }
-.marquee-slide .img-slot:hover { transform: translateY(-4px); transition: transform .4s var(--ease); }
+@media (prefers-reduced-motion: reduce) {
+  .trail-stage { height: clamp(360px, 50vh, 540px); }
+}
+@media (max-width: 600px) {
+  .trail-stage { height: clamp(300px, 70vw, 420px); cursor: default; }
+  .trail-img { width: clamp(110px, 28vw, 160px); }
+  .mudra-divider { padding-bottom: clamp(18px, 4vw, 36px); }
+  .acc-body-inner { padding-left: 4px; }
+  .info-head { padding: 18px 18px; }
+  .info-inner, .info-static { padding-left: 18px; padding-right: 18px; }
+  .journey-stats { gap: 24px; }
+  .journey-stats .st .n { font-size: 38px; }
+  .credits-grid { grid-template-columns: 1fr 1fr; }
+}
 
 /* ============================================================
    Live
@@ -769,8 +853,9 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
         <figcaption>Acharya Dr Raksha Karthik</figcaption>
       </figure>
       <figure class="g-center">
-        <div class="img-slot g-tall">
-          <img src="./saanvi.jpg" alt="Kum. Saanvi Lalwani">
+        <div class="hero-cycle g-tall" id="heroCycle">
+          <div class="hc-layer"><div class="hc-img"></div></div>
+          <div class="hc-layer"><div class="hc-img"></div></div>
         </div>
         <figcaption>Saanvi Lalwani</figcaption>
       </figure>
@@ -878,6 +963,11 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 <!-- ============ MARGAM ============ -->
 <section class="section alt" id="margam">
   <div class="container">
+    <div class="mudra-divider">
+      <span class="ln"></span>
+      <span class="mudra" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 86 C50 72 50 64 50 54"/><path d="M50 54 C41 38 41 24 50 12 C59 24 59 38 50 54 Z"/><path d="M50 54 C39 46 26 48 18 60 C29 64 42 62 50 54 Z"/><path d="M50 54 C61 46 74 48 82 60 C71 64 58 62 50 54 Z"/><path d="M50 54 C43 43 31 38 21 40 C26 53 40 58 50 54 Z"/><path d="M50 54 C57 43 69 38 79 40 C74 53 60 58 50 54 Z"/><circle cx="50" cy="54" r="3"/></svg></span>
+      <span class="ln r"></span>
+    </div>
     <div class="section-head">
       <p class="eyebrow">The Programme</p>
       <h2>The Margam</h2>
@@ -890,6 +980,11 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 <!-- ============ JOURNEY ============ -->
 <section class="section" id="journey">
   <div class="container">
+    <div class="mudra-divider">
+      <span class="ln"></span>
+      <span class="mudra" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M16 84 C32 80 48 68 56 52 C62 40 64 28 60 18"/><path d="M60 18 C55 25 51 32 56 52"/><path d="M56 52 C70 50 86 42 94 30 C84 28 74 32 66 40"/><path d="M56 52 C68 58 82 60 94 54 C88 44 78 42 68 46"/><circle cx="60" cy="15" r="3"/></svg></span>
+      <span class="ln r"></span>
+    </div>
     <div class="section-head">
       <p class="eyebrow">Twelve Years in the Making</p>
       <h2>The Journey</h2>
@@ -915,24 +1010,17 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       </div>
     </div>
 
-    <!-- Auto-scrolling photo marquee -->
+    <!-- Cursor image-trail gallery -->
     <div class="journey-marquee-wrap">
       <p class="film-eyebrow">Twelve years, in pictures</p>
-      <div class="marquee">
-        <div class="marquee-track" id="journeyMarquee">
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi1.JPG"  alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi2.jpg"  alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi3.JPG"  alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi4.jpg"  alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi5.jpg"  alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi7.jpg"  alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi8.jpg"  alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi9.jpeg" alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi10.jpg" alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi11.jpg" alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi12.jpg" alt="Saanvi through the years"></div></div>
-          <div class="marquee-slide"><div class="img-slot"><img src="./photos/youngsaanvi13.JPG" alt="Saanvi through the years"></div></div>
-        </div>
+      <p class="trail-hint">
+        <span class="star">&#10022;</span>&nbsp;
+        <span class="trail-hint-desktop">Move your cursor to relive the moments</span>
+        <span class="trail-hint-touch">Tap and drag to relive the moments</span>
+        &nbsp;<span class="star">&#10022;</span>
+      </p>
+      <div class="trail-stage" id="trailStage" aria-hidden="true">
+        <div class="trail-watermark"><span class="wm-deva">&#2360;&#2381;&#2350;&#2371;&#2340;&#2367;</span></div>
       </div>
     </div>
   </div>
@@ -941,6 +1029,11 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 <!-- ============ LIVE ============ -->
 <section class="section live" id="live">
   <div class="container">
+    <div class="mudra-divider on-dark">
+      <span class="ln"></span>
+      <span class="mudra" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 16 C44 30 40 44 42 58 C44 70 56 70 58 58 C60 44 56 30 50 16 Z"/><path d="M50 16 L50 40 M44 24 L47 42 M56 24 L53 42"/><path d="M42 58 Q50 66 58 58"/></svg></span>
+      <span class="ln r"></span>
+    </div>
     <div class="section-head">
       <p class="eyebrow">On Stage Now</p>
       <h2>Live</h2>
@@ -960,6 +1053,11 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 <!-- ============ TEAM ============ -->
 <section class="section alt" id="team">
   <div class="container">
+    <div class="mudra-divider">
+      <span class="ln"></span>
+      <span class="mudra" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M34 92 C30 70 30 44 41 22 C47 10 50 8 50 8 C50 8 53 10 59 22 C70 44 70 70 66 92 Z"/><path d="M50 12 L50 90"/><path d="M40 34 Q50 31 60 34 M37 60 Q50 56 63 60"/></svg></span>
+      <span class="ln r"></span>
+    </div>
     <div class="section-head">
       <p class="eyebrow">The Ensemble</p>
       <h2>The Team</h2>
@@ -1310,46 +1408,107 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   });
 
   /* ============================================================
-     JOURNEY MARQUEE — JS requestAnimationFrame (no CSS flash)
+     CURSOR IMAGE TRAIL — journey gallery
      ============================================================ */
-  (function () {
-    var track = document.getElementById("journeyMarquee");
-    if (!track) return;
+  (function initTrail() {
+    var stage = document.getElementById("trailStage");
+    if (!stage) return;
 
-    /* duplicate slides for seamless loop */
-    var originals = Array.prototype.slice.call(track.children);
-    originals.forEach(function (node) {
-      var clone = node.cloneNode(true);
-      clone.setAttribute("aria-hidden", "true");
-      track.appendChild(clone);
-    });
+    var PHOTOS = [
+      "./photos/youngsaanvi1.JPG",
+      "./photos/youngsaanvi2.jpg",
+      "./photos/youngsaanvi3.JPG",
+      "./photos/youngsaanvi4.jpg",
+      "./photos/youngsaanvi5.jpg",
+      "./photos/youngsaanvi7.jpg",
+      "./photos/youngsaanvi8.jpg",
+      "./photos/youngsaanvi9.jpeg",
+      "./photos/youngsaanvi10.jpg",
+      "./photos/youngsaanvi11.jpg",
+      "./photos/youngsaanvi12.jpg",
+      "./photos/youngsaanvi13.JPG"
+    ];
 
-    var pos = 0;
-    var lastTs = null;
-    var paused = false;
-    var speed = 120; /* px per second */
-    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) return; /* respect system setting */
-
-    var wrap = track.parentElement; /* .marquee */
-    wrap.addEventListener("mouseenter", function () { paused = true; });
-    wrap.addEventListener("mouseleave", function () { paused = false; });
-    wrap.addEventListener("touchstart", function () { paused = true; }, { passive: true });
-    wrap.addEventListener("touchend",   function () { paused = false; });
-
-    function tick(ts) {
-      if (lastTs !== null && !paused) {
-        var delta = ts - lastTs;
-        pos -= speed * delta / 1000;
-        /* setWidth = half of scrollWidth (original set only) */
-        var setWidth = track.scrollWidth / 2;
-        if (pos <= -setWidth) pos += setWidth; /* invisible reset */
-        track.style.transform = "translate3d(" + pos + "px, 0, 0)";
-      }
-      lastTs = ts;
-      requestAnimationFrame(tick);
+    /* build a pool of reusable trail elements */
+    var POOL = 28;
+    var pool = [];
+    for (var i = 0; i < POOL; i++) {
+      var fig = document.createElement("figure");
+      fig.className = "trail-img";
+      var img = document.createElement("img");
+      img.alt = "";
+      fig.appendChild(img);
+      stage.appendChild(fig);
+      pool.push(fig);
     }
-    requestAnimationFrame(tick);
+
+    var pi = 0, seq = 0;
+    function spawn(x, y) {
+      var fig = pool[pi % POOL]; pi++;
+      var im = fig.firstChild;
+      var u = PHOTOS[seq % PHOTOS.length]; seq++;
+      if (im.getAttribute("src") !== u) im.src = u;
+      fig.classList.remove("ph");
+      fig.style.left = x + "px";
+      fig.style.top  = y + "px";
+      fig.style.setProperty("--rot", (Math.random() * 10 - 5).toFixed(1) + "deg");
+      fig.classList.remove("show");
+      void fig.offsetWidth; /* retrigger animation */
+      fig.classList.add("show");
+    }
+
+    var MIN_DIST = 92;
+    var lastX = 0, lastY = 0, hasLast = false, touched = false;
+    var lastActivity = Date.now();
+
+    function move(clientX, clientY) {
+      var r = stage.getBoundingClientRect();
+      var x = clientX - r.left, y = clientY - r.top;
+      if (x < 0 || y < 0 || x > r.width || y > r.height) return;
+      if (!touched) { touched = true; stage.classList.add("touched"); }
+      if (!hasLast) { lastX = x; lastY = y; hasLast = true; spawn(x, y); return; }
+      var dx = x - lastX, dy = y - lastY;
+      if (Math.sqrt(dx * dx + dy * dy) >= MIN_DIST) {
+        spawn(x, y); lastX = x; lastY = y; lastActivity = Date.now();
+      }
+    }
+
+    stage.addEventListener("pointermove", function(e) { move(e.clientX, e.clientY); }, { passive: true });
+    stage.addEventListener("pointerdown", function(e) { hasLast = false; move(e.clientX, e.clientY); lastActivity = Date.now(); }, { passive: true });
+
+    /* idle auto-demo so the gallery is alive before the user interacts */
+    var demoT = 0;
+    function autoDemo() {
+      if (Date.now() - lastActivity > 1800) {
+        var r = stage.getBoundingClientRect();
+        demoT += 0.6;
+        var x = r.width  * (0.5 + 0.36 * Math.sin(demoT * 0.9));
+        var y = r.height * (0.5 + 0.30 * Math.cos(demoT * 0.6));
+        if (!touched) { touched = true; stage.classList.add("touched"); }
+        spawn(x, y);
+      }
+    }
+    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reducedMotion) setInterval(autoDemo, 900);
+  })();
+
+  /* ============================================================
+     MUDRA DIVIDERS — measure strokes + draw in on scroll
+     ============================================================ */
+  (function initMudras() {
+    document.querySelectorAll(".mudra-divider .mudra svg").forEach(function(svg) {
+      svg.querySelectorAll("path, circle, line").forEach(function(p) {
+        var len = 400;
+        try { len = Math.ceil(p.getTotalLength()) + 2; } catch(e) {}
+        p.style.setProperty("--len", len);
+      });
+    });
+    var mio = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); mio.unobserve(en.target); }
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll(".mudra-divider .mudra").forEach(function(m) { mio.observe(m); });
   })();
 
   /* ============================================================
@@ -1465,6 +1624,76 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       }
     });
   });
+
+  /* ============================================================
+     HERO CENTRE — Ken-Burns photo slideshow
+     Waits for each image to finish loading before crossfading in,
+     and preloads the next photo while the current one is showing.
+     ============================================================ */
+  (function initHeroCycle() {
+    var cycle = document.getElementById("heroCycle");
+    if (!cycle) return;
+    var PHOTOS = [
+      "./photos/saanvi(1).jpg",
+      "./photos/saanvi(2).jpg",
+      "./photos/saanvi(3).jpg",
+      "./photos/saanvi(4).jpg",
+      "./photos/saanvi(5).jpg",
+      "./photos/saanvi(6).jpg",
+      "./photos/saanvi(7).jpg",
+      "./photos/saanvi(8).jpg",
+      "./photos/saanvi(9).jpg",
+      "./photos/saanvi(10).jpg",
+      "./photos/saanvi(11).jpg",
+      "./photos/saanvi(12).jpg",
+      "./photos/saanvi(13).jpg",
+      "./photos/saanvi(14).jpg",
+      "./photos/saanvi(15).jpg"
+    ];
+    var layers = cycle.querySelectorAll(".hc-layer");
+    var idx = 0, step = 0;
+    var loaded = {};
+
+    function preload(url) {
+      if (loaded[url]) return;
+      var img = new Image();
+      img.onload = function () { loaded[url] = true; };
+      img.src = url;
+    }
+
+    function show(url, first) {
+      var incoming = layers[step % 2];
+      var outgoing  = layers[(step + 1) % 2];
+      incoming.querySelector(".hc-img").style.backgroundImage = 'url("' + url + '")';
+      cycle.classList.toggle("alt", step % 2 === 1);
+      incoming.classList.remove("on");
+      void incoming.offsetWidth;
+      incoming.classList.add("on");
+      if (!first) outgoing.classList.remove("on");
+      step++;
+      /* start loading the next photo now so it's ready in time */
+      preload(PHOTOS[idx]);
+    }
+
+    function tick(first) {
+      var url = PHOTOS[idx];
+      idx = (idx + 1) % PHOTOS.length;
+      if (loaded[url]) {
+        show(url, first);
+      } else {
+        /* wait for this photo to finish downloading before showing */
+        var img = new Image();
+        img.onload = function () { loaded[url] = true; show(url, first); };
+        img.onerror = function () { loaded[url] = true; tick(first); }; /* skip broken */
+        img.src = url;
+      }
+    }
+
+    /* kick off loading the first photo immediately */
+    preload(PHOTOS[0]);
+    tick(true);
+    setInterval(tick, 4500);
+  })();
 
   /* ============================================================
      FIREBASE LIVE INTEGRATION
