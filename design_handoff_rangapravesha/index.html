@@ -2074,6 +2074,14 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   wrapper.appendChild(layer);
   while (inner.firstChild) wrapper.appendChild(inner.firstChild);
   inner.appendChild(wrapper);
+  // Build footprints only after the piece opens (height is 0 while closed)
+  var inited = false;
+  new MutationObserver(function () {
+    if (!inited && tumakaItem.classList.contains("open")) {
+      inited = true;
+      setTimeout(function () { initFootprints(".tumaka-reading"); }, 560);
+    }
+  }).observe(tumakaItem, { attributes: true, attributeFilter: ["class"] });
 })();
 
 // Footprints JS
@@ -2126,7 +2134,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   function initFootprints(selector) {
     document.querySelectorAll(selector || ".tumaka-reading").forEach(setup);
   }
-  initFootprints();
   global.initFootprints = initFootprints;
 })(window);
 
