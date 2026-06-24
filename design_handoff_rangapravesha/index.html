@@ -449,6 +449,22 @@ html.is-dark .sahitya .line { color: var(--c-gold-soft); }
   100% { opacity: 0; transform: translateY(108vh) translateX(var(--drift, 40px)) rotate(var(--spin, 360deg)); }
 }
 
+/* Nada Tanumanisham — Damaru banner */
+.nada-banner {
+  position: relative; width: 100%; height: clamp(220px, 32vw, 340px);
+  margin: 4px 0 26px; border-radius: 12px; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 44%, #3a0c16 0%, #240811 48%, #160509 100%);
+  border: 1px solid rgba(182,134,44,.45);
+  box-shadow: 0 16px 40px rgba(44,8,16,.32), inset 0 0 60px rgba(0,0,0,.35);
+}
+.nada-banner canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.nada-cap {
+  position: absolute; left: 0; right: 0; bottom: 16px; text-align: center;
+  font-family: var(--font-display); font-style: italic;
+  font-size: clamp(14px, 1.8vw, 18px); color: #e3bd6a;
+  letter-spacing: .02em; text-shadow: 0 2px 18px rgba(0,0,0,.5); pointer-events: none;
+}
+
 /* Per-piece imagery */
 .margam-figs {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1875,6 +1891,162 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
     // Firebase not yet configured
   }
 
+})();
+</script>
+
+<!-- Damaru animation for Nada Tanumanisham -->
+<script>
+(function (global) {
+  "use strict";
+  function initOne(banner, opts) {
+    var canvas = banner.querySelector("canvas");
+    if (!canvas) { canvas = document.createElement("canvas"); banner.insertBefore(canvas, banner.firstChild); }
+    var ctx = canvas.getContext("2d");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var TAU = Math.PI * 2, GOLD = "233,200,115";
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+    var W, H, DPR, cx, cy, scale;
+    function resize() {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = banner.clientWidth; H = banner.clientHeight;
+      if (!W || !H) return;
+      canvas.width = W * DPR; canvas.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      cx = W / 2; cy = H / 2; scale = Math.min(W, H) / 360;
+    }
+    var particles = [];
+    function emitBurst(power) {
+      var n = Math.round(power * (reduce ? 8 : 18));
+      for (var i = 0; i < n; i++) {
+        var ang = rnd(0, TAU), sp = rnd(0.5, 2.4) * (1 + power * 0.4), t = Math.random();
+        var type = t < 0.30 ? "star" : t < 0.52 ? "note" : t < 0.66 ? "galaxy" : "spark";
+        particles.push({ x: cx, y: cy, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+          life: 0, max: rnd(2.2, 4.4), type: type, size: rnd(0.6, 1.4) * scale,
+          rot: rnd(0, TAU), vr: rnd(-0.04, 0.04), morphAt: rnd(0.18, 0.34), tw: rnd(0, TAU),
+          hue: Math.random() < 0.18 ? "rose" : "gold" });
+      }
+    }
+    function drawStar(p, a, s) {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      var col = p.hue === "rose" ? "244,169,192" : GOLD;
+      ctx.fillStyle = "rgba(" + col + "," + a + ")"; ctx.shadowColor = "rgba(" + col + "," + (a * 0.8) + ")"; ctx.shadowBlur = 12 * s;
+      var R = 7 * s, r = 1.8 * s; ctx.beginPath();
+      for (var i = 0; i < 4; i++) { var A = i * Math.PI / 2; ctx.lineTo(Math.cos(A) * R, Math.sin(A) * R); ctx.lineTo(Math.cos(A + Math.PI / 4) * r, Math.sin(A + Math.PI / 4) * r); }
+      ctx.closePath(); ctx.fill(); ctx.restore();
+    }
+    function drawNote(p, a, s) {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * 0.4);
+      ctx.fillStyle = "rgba(" + GOLD + "," + a + ")"; ctx.strokeStyle = "rgba(" + GOLD + "," + a + ")";
+      ctx.shadowColor = "rgba(" + GOLD + "," + (a * 0.7) + ")"; ctx.shadowBlur = 10 * s; ctx.lineWidth = 1.6 * s;
+      var k = 6 * s;
+      ctx.beginPath(); ctx.moveTo(k * 0.7, -k * 1.8); ctx.lineTo(k * 0.7, k * 0.5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(k * 0.7, -k * 1.8); ctx.quadraticCurveTo(k * 2.1, -k * 1.4, k * 1.3, -k * 0.3); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0, k * 0.6, k * 0.9, k * 0.65, -0.4, 0, TAU); ctx.fill(); ctx.restore();
+    }
+    function drawGalaxy(p, a, s) {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      var turns = 2.2, R = 9 * s;
+      for (var arm = 0; arm < 2; arm++) for (var i = 0; i < 10; i++) {
+        var f = i / 10, ang = arm * Math.PI + f * turns * TAU, rr = f * R;
+        ctx.fillStyle = "rgba(" + GOLD + "," + (a * (1 - f * 0.7)) + ")";
+        ctx.beginPath(); ctx.arc(Math.cos(ang) * rr, Math.sin(ang) * rr * 0.62, (1.5 - f) * s * 1.1, 0, TAU); ctx.fill();
+      }
+      ctx.fillStyle = "rgba(255,240,210," + a + ")"; ctx.shadowColor = "rgba(" + GOLD + "," + a + ")"; ctx.shadowBlur = 10 * s;
+      ctx.beginPath(); ctx.arc(0, 0, 1.8 * s, 0, TAU); ctx.fill(); ctx.restore();
+    }
+    function drawSpark(p, a, s) {
+      var col = p.hue === "rose" ? "244,169,192" : GOLD;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.fillStyle = "rgba(" + col + "," + a + ")";
+      ctx.shadowColor = "rgba(" + col + "," + a + ")"; ctx.shadowBlur = 10 * s;
+      ctx.beginPath(); ctx.arc(0, 0, 1.7 * s, 0, TAU); ctx.fill(); ctx.restore();
+    }
+    function updateParticles() {
+      for (var i = particles.length - 1; i >= 0; i--) {
+        var p = particles[i]; p.life += 1 / 60; var k = p.life / p.max;
+        if (k >= 1) { particles.splice(i, 1); continue; }
+        p.x += p.vx * (1 - k) * 1.6; p.y += p.vy * (1 - k) * 1.6 - 0.12 * scale;
+        p.vx *= 0.992; p.vy *= 0.992; p.rot += p.vr;
+        var morphed = k > p.morphAt, tw = 0.7 + 0.3 * Math.sin(p.life * 4 + p.tw);
+        var a = k < 0.12 ? k / 0.12 : (1 - (k - 0.12) / 0.88);
+        a = Math.max(0, Math.min(1, a)) * tw; var s = p.size;
+        if (!morphed) drawSpark(p, a, s);
+        else if (p.type === "star") drawStar(p, a, s);
+        else if (p.type === "note") drawNote(p, a, s);
+        else if (p.type === "galaxy") drawGalaxy(p, a, s);
+        else drawSpark(p, a, s);
+      }
+    }
+    function drawDamaru(t, beatPulse) {
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(t * 0.22);
+      var s = scale * (1 + beatPulse * 0.06); ctx.scale(s, s);
+      var halo = ctx.createRadialGradient(0, 0, 4, 0, 0, 90);
+      halo.addColorStop(0, "rgba(" + GOLD + "," + (0.20 + beatPulse * 0.30) + ")"); halo.addColorStop(1, "rgba(" + GOLD + ",0)");
+      ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(0, 0, 90, 0, TAU); ctx.fill();
+      ctx.lineWidth = 2.2; ctx.lineJoin = "round"; ctx.lineCap = "round";
+      ctx.strokeStyle = "rgba(" + GOLD + ",0.95)"; ctx.fillStyle = "rgba(110,16,35,0.55)";
+      ctx.shadowColor = "rgba(" + GOLD + ",0.6)"; ctx.shadowBlur = 14;
+      var topW = 34, h = 30, waist = 6;
+      function cone(dir) {
+        ctx.beginPath(); ctx.moveTo(-waist, 0); ctx.lineTo(-topW, dir * h);
+        ctx.quadraticCurveTo(0, dir * (h + 7), topW, dir * h); ctx.lineTo(waist, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-topW, dir * h); ctx.quadraticCurveTo(0, dir * (h + 7), topW, dir * h); ctx.stroke();
+      }
+      cone(-1); cone(1);
+      ctx.fillStyle = "rgba(" + GOLD + ",0.95)"; ctx.shadowBlur = 8; ctx.fillRect(-waist - 1, -4, (waist + 1) * 2, 8);
+      var swing = 26 + beatPulse * 34; ctx.strokeStyle = "rgba(" + GOLD + ",0.8)"; ctx.lineWidth = 1.2; ctx.shadowBlur = 4;
+      [-1, 1].forEach(function (dir) {
+        var bx = dir * swing, by = Math.sin(t * 6 + dir) * 4 * beatPulse;
+        ctx.beginPath(); ctx.moveTo(dir * waist, 0); ctx.quadraticCurveTo(dir * swing * 0.5, by * 0.5, bx, by); ctx.stroke();
+        ctx.fillStyle = "rgba(" + GOLD + ",0.95)"; ctx.shadowColor = "rgba(" + GOLD + ",0.7)"; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.arc(bx, by, 3, 0, TAU); ctx.fill();
+      });
+      ctx.restore();
+    }
+    var BEAT = 0.62, startT = null, lastBeat = -1, raf = null, running = false;
+    function frame(now) {
+      if (startT == null) startT = now;
+      var t = (now - startT) / 1000;
+      ctx.clearRect(0, 0, W, H);
+      var beatPhase = (t % BEAT) / BEAT, beatPulse = Math.max(0, 1 - beatPhase) * (1 - beatPhase);
+      var beatIndex = Math.floor(t / BEAT);
+      if (beatIndex !== lastBeat && t > 0.4) { lastBeat = beatIndex; emitBurst(0.7 + 0.5 * Math.sin(beatIndex * 1.3)); }
+      updateParticles(); drawDamaru(t, beatPulse);
+      if (running) raf = requestAnimationFrame(frame);
+    }
+    function start() { if (running) return; resize(); if (!W || !H) return; running = true; startT = null; lastBeat = -1; raf = requestAnimationFrame(frame); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); particles = []; if (W && H) ctx.clearRect(0, 0, W, H); }
+    var gate = opts && opts.gateSelector ? banner.closest(opts.gateSelector) : null;
+    var openClass = (opts && opts.gateOpenClass) || "open";
+    var onScreen = false;
+    function gateOpen() { return gate ? gate.classList.contains(openClass) : true; }
+    function sync() { if (onScreen && gateOpen()) start(); else stop(); }
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { onScreen = en.isIntersecting; sync(); });
+    }, { threshold: 0.05 }).observe(gate || banner);
+    if (gate) new MutationObserver(sync).observe(gate, { attributes: true, attributeFilter: ["class"] });
+    window.addEventListener("resize", function () { if (running) resize(); });
+  }
+  function initDamaru(opts) {
+    document.querySelectorAll('.nada-banner[data-anim="damaru"]').forEach(function (b) { initOne(b, opts || {}); });
+  }
+  global.initDamaru = initDamaru;
+})(window);
+
+// Inject damaru banner into Nada Tanumanisham (3rd accordion item) and init
+(function () {
+  var acc = document.getElementById("margam-acc");
+  if (!acc) return;
+  var items = acc.querySelectorAll(".acc-item");
+  var nadaItem = items[2]; // n=3 is index 2
+  if (!nadaItem) return;
+  var inner = nadaItem.querySelector(".acc-body-inner");
+  if (!inner) return;
+  var banner = document.createElement("div");
+  banner.className = "nada-banner";
+  banner.setAttribute("data-anim", "damaru");
+  banner.innerHTML = '<canvas></canvas><span class="nada-cap">From the damaru — the first sound of creation</span>';
+  inner.insertBefore(banner, inner.firstChild);
+  initDamaru({ gateSelector: ".acc-item", gateOpenClass: "open" });
 })();
 </script>
 </body>
