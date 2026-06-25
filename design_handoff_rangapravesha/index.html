@@ -982,16 +982,16 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
           mask-image: radial-gradient(ellipse 62% 60% at 50% 50%, #000 46%, transparent 78%);
   animation: none;
 }
-.acc-item.open .glide-ele { animation: glide 26s linear infinite; }
+.acc-item.open .glide-ele { animation: glide 22s linear infinite; }
 @keyframes glide {
   0%   { transform: translate(-62%, -50%); opacity: 0; }
-  12%  { opacity: .14; }
-  50%  { opacity: .15; }
-  88%  { opacity: .13; }
+  6%   { opacity: .35; }
+  50%  { opacity: .38; }
+  94%  { opacity: .35; }
   100% { transform: translate(62%, -50%); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .acc-item.open .glide-ele { animation: none; opacity: .1; transform: translate(0, -50%); }
+  .acc-item.open .glide-ele { animation: none; opacity: .22; transform: translate(0, -50%); }
 }
 
 /* ============================================================
