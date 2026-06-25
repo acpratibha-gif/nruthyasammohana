@@ -1298,8 +1298,8 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
         "Meenakshi is described as &ldquo;Shankari&rdquo; (the peaceful one), &ldquo;Chandrakaladhari&rdquo; the moon-crowned one), and &ldquo;Shatodari&rdquo; (the one with six breasts, symbolizing fertility and abundance). These peaceful forms highlight her nurturing and compassionate aspects. However, the goddess also takes on the fierce form of &ldquo;Chamundeshwari&rdquo;. the slayer of Mahishasura, symbolizing her power and ability to destroy evil. The dancer depicts the story of Mahishasura."
       ],
       images: [
-        { src: "./photos/maathemalayadwaja1.jpeg" },
-        { src: "./photos/maathemalayadwaja2.jpg" }
+        { src: "./photos/maathemalayadwaja1.jpeg", fit: "contain", pos: "center", bg: "#1a0808" },
+        { src: "./photos/maathemalayadwaja2.jpg", pos: "center top" }
       ]
     },
     {
@@ -1397,7 +1397,9 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
     if (p.images && p.images.length) {
       bodyHtml += "<div class='margam-figs" + (p.images.length === 1 ? " single" : "") + "'>" +
         p.images.map(function (im) {
-          return "<figure class='margam-fig'><img src='" + im.src + "' alt='" + (im.cap || p.title) + "' loading='lazy'>" +
+          var imgStyle = im.fit ? " style=\"object-fit:" + im.fit + (im.pos ? ";object-position:" + im.pos : "") + "\"" : "";
+          var figStyle = im.bg ? " style=\"background:" + im.bg + "\"" : "";
+          return "<figure class='margam-fig'" + figStyle + "><img src='" + im.src + "' alt='" + (im.cap || p.title) + "' loading='lazy'" + imgStyle + ">" +
             (im.cap ? "<figcaption>" + im.cap + "</figcaption>" : "") + "</figure>";
         }).join("") + "</div>";
     }
