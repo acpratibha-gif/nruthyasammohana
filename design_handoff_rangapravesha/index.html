@@ -969,6 +969,32 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 }
 
 /* ============================================================
+   Pavadisu Paramathma — Gliding elephant background
+   ============================================================ */
+.pavadisu-piece { position: relative; overflow: hidden; }
+.pavadisu-piece > *:not(.glide-layer) { position: relative; z-index: 1; }
+.glide-layer { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.glide-ele {
+  position: absolute; top: 50%; left: 0;
+  width: min(120%, 820px); height: auto; opacity: 0;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse 62% 60% at 50% 50%, #000 46%, transparent 78%);
+          mask-image: radial-gradient(ellipse 62% 60% at 50% 50%, #000 46%, transparent 78%);
+  animation: none;
+}
+.acc-item.open .glide-ele { animation: glide 26s linear infinite; }
+@keyframes glide {
+  0%   { transform: translate(-62%, -50%); opacity: 0; }
+  12%  { opacity: .14; }
+  50%  { opacity: .15; }
+  88%  { opacity: .13; }
+  100% { transform: translate(62%, -50%); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .acc-item.open .glide-ele { animation: none; opacity: .1; transform: translate(0, -50%); }
+}
+
+/* ============================================================
    Image slots (real photos via <img> tags)
    ============================================================ */
 .img-slot {
@@ -1371,7 +1397,7 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
         "Meenakshi is described as &ldquo;Shankari&rdquo; (the peaceful one), &ldquo;Chandrakaladhari&rdquo; the moon-crowned one), and &ldquo;Shatodari&rdquo; (the one with six breasts, symbolizing fertility and abundance). These peaceful forms highlight her nurturing and compassionate aspects. However, the goddess also takes on the fierce form of &ldquo;Chamundeshwari&rdquo;. the slayer of Mahishasura, symbolizing her power and ability to destroy evil. The dancer depicts the story of Mahishasura."
       ],
       images: [
-        { src: "./photos/maathemalayadwaja1.jpeg", fit: "contain", pos: "center", bg: "#1a0808" },
+        { src: "./photos/maathemalayadwaja1.jpeg", fit: "contain", pos: "center", bg: "#1a0808", pad: "28px" },
         { src: "./photos/maathemalayadwaja2.jpg", pos: "center top" }
       ]
     },
@@ -1471,7 +1497,7 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       bodyHtml += "<div class='margam-figs" + (p.images.length === 1 ? " single" : "") + "'>" +
         p.images.map(function (im) {
           var imgStyle = im.fit ? " style=\"object-fit:" + im.fit + (im.pos ? ";object-position:" + im.pos : "") + "\"" : "";
-          var figStyle = im.bg ? " style=\"background:" + im.bg + "\"" : "";
+          var figStyle = (im.bg || im.pad) ? " style=\"" + (im.bg ? "background:" + im.bg + ";" : "") + (im.pad ? "padding:" + im.pad + ";box-sizing:border-box;" : "") + "\"" : "";
           return "<figure class='margam-fig'" + figStyle + "><img src='" + im.src + "' alt='" + (im.cap || p.title) + "' loading='lazy'" + imgStyle + ">" +
             (im.cap ? "<figcaption>" + im.cap + "</figcaption>" : "") + "</figure>";
         }).join("") + "</div>";
@@ -2353,6 +2379,26 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   banner.innerHTML = '<canvas></canvas><span class="nada-cap">From the damaru — the first sound of creation</span>';
   inner.insertBefore(banner, inner.firstChild);
   initDamaru({ gateSelector: ".acc-item", gateOpenClass: "open" });
+})();
+
+// Inject gliding elephant into Pavadisu Paramatmane (6th accordion item, index 5)
+(function () {
+  var acc = document.getElementById("margam-acc");
+  if (!acc) return;
+  var items = acc.querySelectorAll(".acc-item");
+  var pavadisuItem = items[5];
+  if (!pavadisuItem) return;
+  var inner = pavadisuItem.querySelector(".acc-body-inner");
+  if (!inner) return;
+  var wrapper = document.createElement("div");
+  wrapper.className = "pavadisu-piece";
+  var glideLayer = document.createElement("div");
+  glideLayer.className = "glide-layer";
+  glideLayer.setAttribute("aria-hidden", "true");
+  glideLayer.innerHTML = '<img class="glide-ele" src="./photos/elephant-ref.png" alt="">';
+  wrapper.appendChild(glideLayer);
+  while (inner.firstChild) wrapper.appendChild(inner.firstChild);
+  inner.appendChild(wrapper);
 })();
 </script>
 </body>
