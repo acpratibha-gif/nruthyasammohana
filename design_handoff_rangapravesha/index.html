@@ -896,6 +896,79 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
 /* ============================================================
+   Mobile — ≤ 600px (fills gaps not covered by scattered rules)
+   ============================================================ */
+@media (max-width: 600px) {
+  /* Story sub-accordion */
+  .story-summary { padding: 12px 16px; font-size: 11px; }
+  .story-body { padding: 14px 16px 18px; }
+  .story-body p { font-size: 14px; }
+
+  /* Live section */
+  .live-card { padding: 28px 20px; }
+  .live-meta { font-size: 17px; }
+  .live-progress span { width: 16px; }
+
+  /* Team */
+  .team-card { padding: 18px; }
+  .team-card .name { font-size: 20px; }
+
+  /* Invite / doc cards */
+  .doc-card { padding: 16px 18px; gap: 14px; }
+  .doc-card .t { font-size: 18px; }
+
+  /* Journey photo height */
+  .journey-photo .img-slot { height: clamp(220px, 60vw, 320px); }
+
+  /* Lotus & damaru banner heights */
+  .lotus-banner { height: clamp(220px, 66vw, 320px); }
+  .nada-banner  { height: clamp(180px, 52vw, 240px); }
+
+  /* Margam image height already set to 260px; reduce slightly more */
+  .margam-fig img { height: 220px; }
+}
+
+/* ============================================================
+   Mobile — ≤ 480px (tight phones)
+   ============================================================ */
+@media (max-width: 480px) {
+  /* Tighter container side padding */
+  .container { padding: 0 16px; }
+
+  /* Smaller base body text */
+  body { font-size: 16px; }
+
+  /* Journey section */
+  .journey-text p { font-size: 16px; }
+  .journey-text .drop::first-letter { font-size: 52px; padding: 5px 8px 0 0; }
+
+  /* Info cards body text */
+  .info-inner p { font-size: 15px; line-height: 1.68; }
+  .info-inner .drop { font-size: 16px; }
+
+  /* Live card */
+  .live-card { padding: 24px 18px; }
+  .live-meta { font-size: 16px; }
+
+  /* Footer body text */
+  .footer .om { font-size: 16px; line-height: 1.65; }
+
+  /* Eyebrow letter-spacing */
+  .eyebrow { letter-spacing: .18em; }
+
+  /* Section lead text */
+  .section-lead { font-size: clamp(16px, 4.2vw, 20px); }
+
+  /* Hero meta items — stack vertically */
+  .hero-meta { flex-direction: column; align-items: center; gap: 6px; }
+
+  /* Accordion — even tighter on very small screens */
+  .acc-num { font-size: 24px; min-width: 1.4em; }
+  .acc-title .t { font-size: 19px; }
+  .acc-title .meta { font-size: 13px; }
+}
+
+/* ============================================================
    Image slots (real photos via <img> tags)
    ============================================================ */
 .img-slot {
