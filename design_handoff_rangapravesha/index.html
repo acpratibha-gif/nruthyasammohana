@@ -969,6 +969,25 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 }
 
 /* ============================================================
+   Thiruppavai — Paasuram 24 · Potri reveal stage
+   ============================================================ */
+.potri-stage {
+  position: relative; width: 100%; height: clamp(220px, 34vw, 280px);
+  background: radial-gradient(120% 120% at 50% 42%, #fbf6ec 0%, #f7f0e3 55%, #f1e8d6 100%);
+  border: 1px solid #e7dcc4; border-radius: 14px; overflow: hidden;
+  display: grid; place-items: center;
+  box-shadow: inset 0 0 50px rgba(201,163,90,.07);
+  margin: 0 0 26px;
+}
+.potri-symbol { position: absolute; inset: 0; display: grid; place-items: center; }
+.potri-word {
+  position: absolute; bottom: 14px; left: 0; right: 0; text-align: center;
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 11px; letter-spacing: .34em; text-transform: uppercase;
+  color: #a9813a;
+}
+
+/* ============================================================
    Pavadisu Paramathma — Gliding elephant background
    ============================================================ */
 .pavadisu-piece { position: relative; overflow: hidden; }
@@ -2381,6 +2400,20 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   initDamaru({ gateSelector: ".acc-item", gateOpenClass: "open" });
 })();
 
+// Inject potri-root into Thiruppavai (7th accordion item, index 6)
+(function () {
+  var acc = document.getElementById("margam-acc");
+  if (!acc) return;
+  var items = acc.querySelectorAll(".acc-item");
+  var item = items[6];
+  if (!item) return;
+  var inner = item.querySelector(".acc-body-inner");
+  if (!inner) return;
+  var root = document.createElement("div");
+  root.id = "potri-root";
+  inner.insertBefore(root, inner.firstChild);
+})();
+
 // Inject gliding elephant into Pavadisu Paramatmane (6th accordion item, index 5)
 (function () {
   var acc = document.getElementById("margam-acc");
@@ -2400,6 +2433,160 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   while (inner.firstChild) wrapper.appendChild(inner.firstChild);
   inner.appendChild(wrapper);
 })();
+</script>
+
+<!-- Thiruppavai Potri: React 18 + Framer Motion 10 + Babel (inline JSX) -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<script type="text/babel">
+const FM = window.Motion || window.FramerMotion || window.framerMotion || {};
+const { motion, AnimatePresence } = FM;
+const { useState, useEffect, useRef } = React;
+
+const GOLD = "#c9a35a", GOLDD = "#a9813a", GOLDB = "#e4c886";
+const ASSETS = "./photos/";
+const GATE_SELECTOR = ".acc-item";
+const GATE_OPEN_CLASS = "open";
+
+function maskImg(src, w, h, mask) {
+  return (
+    <img src={ASSETS + src} alt="" width={w} height={h}
+      style={{ display:"block", mixBlendMode:"multiply", WebkitMaskImage:mask, maskImage:mask }} />
+  );
+}
+const M_FEET  = "radial-gradient(ellipse 64% 66% at 50% 50%, #000 52%, transparent 82%)";
+const M_WIDE  = "radial-gradient(ellipse 70% 72% at 50% 50%, #000 56%, transparent 84%)";
+const M_NAMAM = "radial-gradient(ellipse 66% 70% at 50% 48%, #000 54%, transparent 84%)";
+
+function Petal() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <defs>
+        <linearGradient id="potri-pg" x1="0.15" y1="0.85" x2="0.85" y2="0.15">
+          <stop offset="0" stopColor={GOLDD}/><stop offset="0.5" stopColor={GOLD}/><stop offset="1" stopColor={GOLDB}/>
+        </linearGradient>
+      </defs>
+      <g transform="rotate(-34 32 32)">
+        <path d="M10 34 C20 22 44 22 54 30 C46 38 22 40 10 34 Z" fill="url(#potri-pg)" opacity="0.95"/>
+        <path d="M16 33 C26 27 42 27 50 31" stroke={GOLDD} strokeWidth="0.7" opacity="0.45" fill="none"/>
+      </g>
+    </svg>
+  );
+}
+function Feet()       { return maskImg("footprints.png",   150, 102, M_FEET);  }
+function Mountain()   { return maskImg("govardhana.png",   220, 145, M_WIDE);  }
+function ConchChakra(){ return maskImg("conch-chakra.png", 220, 145, M_WIDE);  }
+function Namam()      { return maskImg("namam.png",        150, 125, M_NAMAM); }
+function Bow() {
+  return (
+    <svg width="96" height="120" viewBox="0 0 96 120" fill="none">
+      <path d="M30 8 C70 34 70 86 30 112" stroke={GOLD} strokeWidth="4" strokeLinecap="round" fill="none"/>
+      <path d="M30 8 C62 34 62 86 30 112" stroke={GOLDB} strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.7"/>
+      <line x1="30" y1="8" x2="30" y2="112" stroke={GOLDD} strokeWidth="1.4"/>
+      <line x1="26" y1="60" x2="74" y2="60" stroke={GOLD} strokeWidth="2" strokeLinecap="round"/>
+      <path d="M74 60 L67 56 M74 60 L67 64" stroke={GOLD} strokeWidth="2" strokeLinecap="round"/>
+      <circle cx="30" cy="8" r="2.4" fill={GOLDD}/><circle cx="30" cy="112" r="2.4" fill={GOLDD}/>
+    </svg>
+  );
+}
+
+const SEQ = [
+  { id:"p1",       type:"petal",    dur:1100 },
+  { id:"feet",     type:"feet",     dur:1300, word:"Potri" },
+  { id:"p2",       type:"petal",    dur:950  },
+  { id:"bow",      type:"bow",      dur:1300, word:"Potri" },
+  { id:"p3",       type:"petal",    dur:950  },
+  { id:"mountain", type:"mountain", dur:1300, word:"Potri" },
+  { id:"p4",       type:"petal",    dur:950  },
+  { id:"conch",    type:"conch",    dur:1400, word:"Potri" },
+  { id:"namam",    type:"namam",    dur:Infinity, word:"Potri" }
+];
+const EASE = [0.4,0,0.2,1];
+const GLYPHS = { feet:Feet, bow:Bow, mountain:Mountain, conch:ConchChakra, namam:Namam };
+
+function Potri() {
+  const [i, setI] = useState(0);
+  const [active, setActive] = useState(false);
+  const rootRef = useRef(null);
+  const timer = useRef(null);
+
+  useEffect(() => {
+    if (!active) return;
+    const node = SEQ[i];
+    if (!node || node.dur === Infinity) return;
+    timer.current = setTimeout(() => setI((v) => Math.min(v+1, SEQ.length-1)), node.dur);
+    return () => clearTimeout(timer.current);
+  }, [i, active]);
+
+  useEffect(() => {
+    const stage = rootRef.current;
+    if (!stage) return;
+    const gate = GATE_SELECTOR ? stage.closest(GATE_SELECTOR) : null;
+    function open()  { setI(0); setActive(true); }
+    function close() { clearTimeout(timer.current); setActive(false); setI(0); }
+    if (!gate) {
+      const io = new IntersectionObserver(
+        (es) => es.forEach((e) => { if (e.isIntersecting) { open(); io.disconnect(); } }),
+        { threshold: 0.3 }
+      );
+      io.observe(stage);
+      return () => io.disconnect();
+    }
+    const sync = () => (gate.classList.contains(GATE_OPEN_CLASS) ? open() : close());
+    const mo = new MutationObserver(sync);
+    mo.observe(gate, { attributes:true, attributeFilter:["class"] });
+    sync();
+    return () => mo.disconnect();
+  }, []);
+
+  const node    = SEQ[i];
+  const isPetal = node.type === "petal";
+  const persist = node.type === "namam";
+  const Glyph   = isPetal ? Petal : GLYPHS[node.type];
+
+  return (
+    <div className="potri-stage" ref={rootRef}
+      role="img" aria-label="Devotional reveal ending on the Sri Vaishnava Namam">
+      <AnimatePresence mode="wait" initial={false}>
+        {active && (
+          <motion.div className="potri-symbol" key={node.id}
+            initial={isPetal ? {opacity:0,y:-54} : {opacity:0,scale:0.98}}
+            animate={isPetal ? {opacity:[0,0.95,0.95,0],y:[-54,-6,18,64]} : {opacity:1,scale:1}}
+            exit={{opacity:0}}
+            transition={isPetal
+              ? {duration:node.dur/1000, ease:EASE, times:[0,0.3,0.7,1]}
+              : {duration: persist ? 1.4 : 0.7, ease:EASE}}>
+            {persist ? (
+              <motion.div
+                animate={{filter:[
+                  "drop-shadow(0 0 0px rgba(201,163,90,0))",
+                  "drop-shadow(0 0 10px rgba(201,163,90,.45))",
+                  "drop-shadow(0 0 4px rgba(201,163,90,.2))"
+                ]}}
+                transition={{duration:4, repeat:Infinity, ease:"easeInOut"}}>
+                <Glyph />
+              </motion.div>
+            ) : <Glyph />}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {active && node && node.word && (
+          <motion.div className="potri-word" key={"w"+node.id}
+            initial={{opacity:0}} animate={{opacity:0.85}} exit={{opacity:0}}
+            transition={{duration:0.8, ease:EASE}}>
+            {node.word}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+const potriEl = document.getElementById("potri-root");
+if (potriEl) ReactDOM.createRoot(potriEl).render(<Potri />);
 </script>
 </body>
 </html>
