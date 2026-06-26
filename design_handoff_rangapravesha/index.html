@@ -2401,6 +2401,7 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 })();
 
 // Inject potri-root into Thiruppavai (7th accordion item, index 6)
+// Place it AFTER the first story-details (Pasuram 24) so it sits below that sub-accordion
 (function () {
   var acc = document.getElementById("margam-acc");
   if (!acc) return;
@@ -2411,7 +2412,14 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   if (!inner) return;
   var root = document.createElement("div");
   root.id = "potri-root";
-  inner.insertBefore(root, inner.firstChild);
+  var firstStory = inner.querySelector(".story-details");
+  if (firstStory && firstStory.nextSibling) {
+    inner.insertBefore(root, firstStory.nextSibling);
+  } else if (firstStory) {
+    inner.appendChild(root);
+  } else {
+    inner.insertBefore(root, inner.firstChild);
+  }
 })();
 
 // Inject gliding elephant into Pavadisu Paramatmane (6th accordion item, index 5)
