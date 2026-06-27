@@ -983,6 +983,48 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 }
 
 /* ============================================================
+   Kalinga Narthana Thillana — floating peacock feather
+   ============================================================ */
+.kalinga-banner {
+  position: relative; width: 100%; height: clamp(240px, 36vw, 320px);
+  margin: 0 0 26px; border-radius: 14px; overflow: hidden;
+  background: radial-gradient(130% 120% at 52% 42%, #fdf8ef 0%, #f7f0de 52%, #ede1c6 100%);
+  border: 1px solid rgba(201,163,90,.28);
+  box-shadow: 0 16px 44px rgba(110,65,20,.12), inset 0 0 60px rgba(201,163,90,.06);
+  display: grid; place-items: center;
+}
+.feather-wrap {
+  width: min(80%, 440px);
+  opacity: 0; animation: none;
+  transform: translateY(0) rotate(-5deg);
+}
+.acc-item.open .feather-wrap {
+  animation:
+    feather-fadein 1.4s cubic-bezier(.22,.61,.36,1) .2s forwards,
+    feather-float  5.6s ease-in-out 1.6s infinite;
+}
+.feather-wrap img {
+  width: 100%; height: auto; display: block;
+  filter: drop-shadow(0 6px 22px rgba(60,120,80,.18)) drop-shadow(0 0 40px rgba(201,163,90,.12));
+}
+@keyframes feather-fadein {
+  from { opacity: 0; transform: translateY(28px) rotate(-5deg); }
+  to   { opacity: 1; transform: translateY(0)    rotate(-5deg); }
+}
+@keyframes feather-float {
+  0%   { transform: translateY(0)    rotate(-5deg); }
+  28%  { transform: translateY(-16px) rotate(-1deg); }
+  55%  { transform: translateY(-8px)  rotate(-8deg); }
+  78%  { transform: translateY(-20px) rotate(-3deg); }
+  100% { transform: translateY(0)    rotate(-5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .acc-item.open .feather-wrap {
+    animation: feather-fadein 1.4s cubic-bezier(.22,.61,.36,1) .2s forwards;
+  }
+}
+
+/* ============================================================
    Thiruppavai — Paasuram 24 · Potri reveal stage
    ============================================================ */
 .potri-stage {
@@ -2437,6 +2479,29 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   banner.innerHTML = '<canvas></canvas><span class="nada-cap">From the damaru — the first sound of creation</span>';
   inner.insertBefore(banner, inner.firstChild);
   initDamaru({ gateSelector: ".acc-item", gateOpenClass: "open" });
+})();
+
+// Inject floating peacock feather into Kalinga Narthana Thillana (8th accordion item, index 7)
+(function () {
+  var acc = document.getElementById("margam-acc");
+  if (!acc) return;
+  var items = acc.querySelectorAll(".acc-item");
+  var item = items[7];
+  if (!item) return;
+  var inner = item.querySelector(".acc-body-inner");
+  if (!inner) return;
+  var banner = document.createElement("div");
+  banner.className = "kalinga-banner";
+  banner.setAttribute("aria-hidden", "true");
+  var wrap = document.createElement("div");
+  wrap.className = "feather-wrap";
+  var img = document.createElement("img");
+  img.src = "./photos/peacock-feather.png";
+  img.alt = "";
+  img.loading = "lazy";
+  wrap.appendChild(img);
+  banner.appendChild(wrap);
+  inner.insertBefore(banner, inner.firstChild);
 })();
 
 // Inject potri-root into Thiruppavai (7th accordion item, index 6)
