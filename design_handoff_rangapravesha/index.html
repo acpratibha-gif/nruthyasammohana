@@ -917,8 +917,9 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   .doc-card { padding: 16px 18px; gap: 14px; }
   .doc-card .t { font-size: 18px; }
 
-  /* Journey photo height */
+  /* Journey photo height + anchor to top so face is visible */
   .journey-photo .img-slot { height: clamp(220px, 60vw, 320px); }
+  .journey-photo .img-slot img { object-position: center top; }
 
   /* Lotus & damaru banner heights */
   .lotus-banner { height: clamp(220px, 66vw, 320px); }
