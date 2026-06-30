@@ -1099,6 +1099,7 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       <li><a href="#margam">Margam</a></li>
       <li><a href="#live">Live</a></li>
       <li><a href="#team">Team</a></li>
+      <li><a href="#wishes">Wishes</a></li>
     </ul>
   </div>
 </nav>
@@ -1291,6 +1292,22 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 </section>
 
 <!-- ============ LIVE ============ -->
+<style>
+  .live-badge.hidden { display: none; }
+  .live-blurb { font-family: var(--font-display); font-style: italic; font-size: clamp(17px, 2.2vw, 21px); color: var(--c-hero-fg); opacity: .9; margin: 16px auto 0; max-width: 520px; line-height: 1.45; min-height: 1.3em; transition: opacity .5s; }
+  .live-list { list-style: none; margin: 30px auto 0; padding: 24px 4px 4px; max-width: 480px; text-align: left; border-top: 1px solid rgba(227,189,106,.18); display: flex; flex-direction: column; gap: 1px; }
+  .live-row { display: flex; align-items: center; gap: 13px; padding: 10px 10px; border-radius: 11px; transition: background .35s var(--ease); }
+  .live-row .ix { font-family: var(--font-label); font-size: 12px; letter-spacing: .1em; color: var(--c-hero-gold); opacity: .45; min-width: 2em; }
+  .live-row .ic { width: 18px; flex: none; display: grid; place-items: center; color: rgba(227,189,106,.4); }
+  .live-row .nm { font-family: var(--font-display); font-size: 18px; color: var(--c-hero-fg); opacity: .5; transition: opacity .35s, color .35s; }
+  .live-row.done .ic { color: var(--c-hero-gold); }
+  .live-row.done .nm { opacity: .62; }
+  .live-row.cur { background: rgba(224,86,63,.16); }
+  .live-row.cur .ix { opacity: 1; }
+  .live-row.cur .nm { opacity: 1; color: #fff; font-weight: 600; }
+  .live-dot-green { width: 9px; height: 9px; border-radius: 50%; background: #43c172; box-shadow: 0 0 0 0 rgba(67,193,114,.6); animation: lpgreen 1.8s infinite; }
+  @keyframes lpgreen { 0% { box-shadow: 0 0 0 0 rgba(67,193,114,.5); } 70% { box-shadow: 0 0 0 8px rgba(67,193,114,0); } 100% { box-shadow: 0 0 0 0 rgba(67,193,114,0); } }
+</style>
 <section class="section live" id="live">
   <div class="container">
     <div class="mudra-divider on-dark">
@@ -1304,12 +1321,13 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       <p class="section-lead" style="color:var(--c-hero-gold);opacity:.85">Updates appear here in real time during the performance.</p>
     </div>
     <div class="live-card" id="liveCard">
-      <div class="live-badge"><span class="live-dot"></span> Live</div>
+      <div class="live-badge hidden" id="liveBadge"><span class="live-dot"></span> Live</div>
       <div class="live-now"  id="liveNow">Welcome</div>
       <div class="live-title" id="liveTitle">The recital will begin shortly</div>
       <div class="live-meta"  id="liveMeta">Please be seated &middot; phones on silent</div>
-      <div class="live-progress" id="liveProgress"></div>
-      <p class="live-hint">This page updates itself &mdash; no need to refresh.</p>
+      <p class="live-blurb" id="liveBlurb"></p>
+      <ul class="live-list" id="liveList"></ul>
+      <p class="live-hint" id="liveHint">This page updates live &mdash; no need to refresh.</p>
     </div>
   </div>
 </section>
@@ -1340,6 +1358,164 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
     <div class="credits-grid" id="credits"></div>
   </div>
 </section>
+
+<!-- ============ WISHES & BLESSINGS ============ -->
+<style>
+  .wishes-intro { max-width: 640px; margin: 0 auto; }
+  .wish-form {
+    max-width: 640px; margin: 0 auto clamp(40px, 5vw, 60px);
+    background: color-mix(in srgb, var(--c-gold) 6%, var(--c-surface));
+    border: 1px solid var(--c-line); border-radius: 18px;
+    padding: clamp(22px, 3vw, 32px);
+    box-shadow: 0 18px 44px rgba(110,16,35,.07);
+  }
+  .wish-form .row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .wish-form .row > * { flex: 1 1 200px; }
+  .wish-field {
+    font-family: var(--font-body); font-size: 16px; color: var(--c-ink);
+    background: var(--c-bg); border: 1px solid var(--c-line); border-radius: 10px;
+    padding: 12px 15px; width: 100%; box-sizing: border-box;
+    transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .wish-field::placeholder { color: color-mix(in srgb, var(--c-ink-soft) 70%, transparent); }
+  .wish-field:focus {
+    outline: none; border-color: var(--c-gold);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-gold) 18%, transparent);
+  }
+  textarea.wish-field { resize: vertical; min-height: 96px; line-height: 1.5; }
+  .wish-form-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+  .wish-count { font-family: var(--font-label); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--c-ink-soft); }
+  .wish-note {
+    font-family: var(--font-display); font-style: italic; font-size: 16px;
+    color: var(--c-ink-soft); text-align: center; margin: 0 auto 28px; max-width: 560px;
+  }
+  .wish-wall { columns: 3 270px; column-gap: 22px; max-width: 1040px; margin: 0 auto; }
+  .wish-card {
+    break-inside: avoid; margin: 0 0 22px;
+    background: var(--c-bg); border: 1px solid var(--c-line); border-radius: 16px;
+    padding: 24px 24px 20px; position: relative;
+    box-shadow: 0 10px 26px rgba(58,36,28,.05);
+  }
+  .section.alt .wish-card { background: var(--c-surface); }
+  .wish-card::before {
+    content: "\201C"; font-family: var(--font-display); color: var(--c-gold);
+    font-size: 52px; line-height: .6; position: absolute; top: 18px; left: 18px; opacity: .35;
+  }
+  .wish-msg {
+    font-family: var(--font-display); font-size: 20px; line-height: 1.42; color: var(--c-ink);
+    margin: 14px 0 16px; position: relative; z-index: 1;
+  }
+  .wish-rule { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: var(--c-gold); }
+  .wish-rule::before { content: ""; height: 1px; width: 22px; background: currentColor; opacity: .5; }
+  .wish-rule span { font-size: 12px; }
+  .wish-from { font-family: var(--font-label); font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--c-maroon); font-weight: 600; }
+  html.is-dark .wish-from { color: var(--c-gold-soft); }
+  .wish-rel { display: block; font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--c-ink-soft); letter-spacing: 0; text-transform: none; margin-top: 2px; }
+  @keyframes wishIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .wish-card.is-new { animation: wishIn .6s var(--ease) both; box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-gold) 55%, transparent), 0 12px 30px rgba(110,16,35,.12); }
+  .wish-empty { text-align: center; font-family: var(--font-display); font-style: italic; font-size: 19px; color: var(--c-ink-soft); padding: 30px 0; }
+  @media (max-width: 560px) { .wish-wall { columns: 1; } }
+</style>
+<section class="section" id="wishes">
+  <div class="container">
+    <div class="mudra-divider">
+      <span class="ln"></span>
+      <span class="mudra" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M34 92 C30 70 30 44 41 22 C47 10 50 8 50 8 C50 8 53 10 59 22 C70 44 70 70 66 92 Z"/><path d="M50 12 L50 90"/><path d="M40 34 Q50 31 60 34 M37 60 Q50 56 63 60"/></svg></span>
+      <span class="ln r"></span>
+    </div>
+    <div class="section-head">
+      <p class="eyebrow">Blessings</p>
+      <h2>Wishes for Saanvi</h2>
+      <p class="section-lead">Leave a blessing for Saanvi as she steps onto the stage. Your wishes will grace this wall.</p>
+    </div>
+
+    <form class="wish-form" id="wishForm" autocomplete="off">
+      <div class="row">
+        <input class="wish-field" id="wishName" type="text" maxlength="40" placeholder="Your name" aria-label="Your name" />
+        <input class="wish-field" id="wishRel" type="text" maxlength="40" placeholder="Relation (e.g. Aunt, Guru, Friend)" aria-label="Your relation to Saanvi" />
+      </div>
+      <textarea class="wish-field" id="wishMsg" maxlength="280" placeholder="Write your wish or blessing&hellip;" aria-label="Your wish"></textarea>
+      <div class="wish-form-foot">
+        <span class="wish-count" id="wishCount">280 left</span>
+        <button class="btn btn-gold" type="submit">Offer your wish</button>
+      </div>
+    </form>
+    <p class="wish-note">Wishes appear here the moment you offer them. In the live version, an organiser can approve each one before it shows.</p>
+
+    <div class="wish-wall" id="wishWall"></div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var KEY = "saanvi_wishes_v1";
+  var form  = document.getElementById("wishForm");
+  if (!form) return;
+  var nameI = document.getElementById("wishName");
+  var relI  = document.getElementById("wishRel");
+  var msgI  = document.getElementById("wishMsg");
+  var count = document.getElementById("wishCount");
+  var wall  = document.getElementById("wishWall");
+
+  var SEED = [
+    { name: "Lalwani Family", rel: "With all our love", msg: "May Goddess Saraswati dance through your every step today. We are endlessly proud of you, Saanvi.", ts: 1 },
+    { name: "Aishwarya", rel: "Cousin", msg: "From the little girl who twirled in the living room to the artist on the sacred stage — shine, Saanvi!", ts: 2 },
+    { name: "Sridhar Uncle", rel: "Family friend", msg: "Wishing you grace, abhinaya, and a heart full of bhakti. Break a thousand taalams!", ts: 3 }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return SEED.slice();
+  }
+  function save(list) {
+    try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  function cardHTML(w, isNew) {
+    var rel = w.rel ? '<span class="wish-rel">' + esc(w.rel) + "</span>" : "";
+    var from = w.name ? esc(w.name) : "A well-wisher";
+    return '<div class="wish-card' + (isNew ? " is-new" : "") + '">' +
+        '<p class="wish-msg">' + esc(w.msg) + "</p>" +
+        '<div class="wish-rule"><span>&#10022;</span></div>' +
+        '<div class="wish-from">' + from + rel + "</div>" +
+      "</div>";
+  }
+  function render(list, newId) {
+    if (!list.length) { wall.innerHTML = '<p class="wish-empty">Be the first to offer a blessing.</p>'; return; }
+    wall.innerHTML = list.map(function (w) { return cardHTML(w, w.ts === newId); }).join("");
+  }
+
+  var wishes = load();
+  render(wishes);
+
+  function updateCount() {
+    var left = 280 - msgI.value.length;
+    count.textContent = left + " left";
+  }
+  msgI.addEventListener("input", updateCount);
+  updateCount();
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var msg = msgI.value.trim();
+    if (!msg) { msgI.focus(); return; }
+    var entry = { name: nameI.value.trim(), rel: relI.value.trim(), msg: msg, ts: Date.now() };
+    wishes.unshift(entry);
+    save(wishes);
+    render(wishes, entry.ts);
+    form.reset();
+    updateCount();
+    nameI.focus();
+  });
+})();
+</script>
 
 <!-- ============ INVITE & BROCHURE ============ -->
 <section class="section" id="invite">
@@ -1978,56 +2154,125 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   revealEls.forEach(function (el) { ro.observe(el); });
 
   /* ============================================================
-     LIVE FEED — demo loop
+     LIVE FEED — synced via Firebase (Live Control.html)
+     The organiser advances pieces from the phone control panel
+     (Live Control.html); this public page updates instantly for
+     everyone. Falls back to a local cross-tab demo if Firebase is
+     unreachable. State shape: { i: <index|-1>, mode, t }.
      ============================================================ */
+  var LIVE_PROGRAM = [
+    { title: "Pushpanjali &amp; Shloka",        meta: "Opening Invocation · Ragam Nattai · Adi",        blurb: "An offering of flowers to the gods, the guru, and the audience — the dancer's reverent salutation that opens the recital." },
+    { title: "Gaiye Ganapathi Jagvandan",       meta: "Devotional · Ragam Yaman · Aadi",               blurb: "A joyful invocation of Lord Ganesha, remover of obstacles — a bhajan by Sant Tulsidas." },
+    { title: "Nada Tanumanisham Shankaram",     meta: "Invocation · Ragam Chittaranjani · Aadi",       blurb: "Thyagaraja's hymn to Shiva as the very embodiment of Nada — sacred sound itself." },
+    { title: "Tumak Chalat Ramachandra",        meta: "Bhajan · Mishra Peelu · Tishra Ekam",          blurb: "Tulsidas's tender vision of the child Rama toddling on little feet, gathered lovingly into his mother's arms." },
+    { title: "Maathe Malayadwaja",              meta: "Daru Varna · Raga Kamas · Aadi",                blurb: "The centrepiece — a Daru Varna to Meenakshi, daughter of King Malayadhvaja, revealing the goddess in all her facets." },
+    { title: "Pavadisu Paramatmane",            meta: "Devotional · Ragamalika · Adi",                 blurb: "Purandara Dasa's plea to the Supreme, woven with the story of Hathiram Baba's devotion to Lord Venkateshwara." },
+    { title: "Thiruppavai · Pasuram 24",       meta: "Padam · Sindhubhairavi · Aadi · Andal",      blurb: "Andal's 'Potri' — a garland of praise to the Lord as Vamana, Rama, and Krishna." },
+    { title: "Thiruppavai · Pasuram 30",       meta: "Padam · Madhyamavati · Mishra Chapu",          blurb: "'Vanga Kadal' — Andal's concluding verse, sealing the sacred vow of the Thiruppavai." },
+    { title: "Kalinga Narthana Thillana",       meta: "Thillana · Gambheera Nata · Aadi",              blurb: "The rhythmic finale — Krishna dances in triumph upon the serpent Kalinga." },
+    { title: "Mangalam · Achyutam Keshavam",    meta: "Closing Mangalam · Yaman Kalyani · Adi",        blurb: "The closing benediction — a prayer of auspiciousness to conclude the recital." }
+  ];
+
+  var LiveSync = (function () {
+    var PATH = "live_state";
+    var DEFAULT = { i: -1, mode: "before", t: 0 };
+    var KEY = "arangetram_live_state";
+    var cbs = [], cur = DEFAULT, ref = null, bc = null;
+    function emit() { cbs.forEach(function (cb) { try { cb(cur); } catch (e) {} }); }
+    function startFirebase() {
+      try {
+        var cfg = { databaseURL: "https://my-arangetram-default-rtdb.asia-southeast1.firebasedatabase.app/" };
+        if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(cfg);
+        ref = firebase.database().ref(PATH);
+        ref.on("value", function (snap) { var v = snap.val(); cur = v || DEFAULT; emit(); });
+        return true;
+      } catch (e) { return false; }
+    }
+    function startDemo() {
+      try { var r = localStorage.getItem(KEY); if (r) cur = JSON.parse(r); } catch (e) {}
+      if ("BroadcastChannel" in window) { bc = new BroadcastChannel("arangetram_live"); bc.onmessage = function (ev) { cur = ev.data; emit(); }; }
+      window.addEventListener("storage", function (e) { if (e.key === KEY && e.newValue) { try { cur = JSON.parse(e.newValue); emit(); } catch (_) {} } });
+    }
+    if (typeof firebase === "undefined" || !startFirebase()) startDemo();
+    return {
+      subscribe: function (cb) { cbs.push(cb); cb(cur); return function () { cbs = cbs.filter(function (x) { return x !== cb; }); }; },
+      set: function (s) { s.t = Date.now(); cur = s; if (ref) { ref.set(s); } else { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} if (bc) bc.postMessage(s); emit(); } },
+      getState: function () { return cur; }
+    };
+  })();
+  window.LiveSync = LiveSync;
+
+  var liveBadge = document.getElementById("liveBadge");
   var liveNow   = document.getElementById("liveNow");
   var liveTitle = document.getElementById("liveTitle");
   var liveMeta  = document.getElementById("liveMeta");
-  var liveProg  = document.getElementById("liveProgress");
+  var liveBlurb = document.getElementById("liveBlurb");
+  var liveList  = document.getElementById("liveList");
 
-  var steps = [{ now: "Welcome", title: "The recital will begin shortly", meta: "Please be seated · phones on silent" }]
-    .concat(MARGAM.map(function (p) {
-      return {
-        now:   "Now performing · " + String(p.n).padStart(2, "0"),
-        title: p.title,
-        meta:  p.kind + " · " + p.meta
-      };
-    }))
-    .concat([{ now: "Thank you", title: "Śubhamastu", meta: "With gratitude to all who joined us this evening" }]);
+  function lpad(n) { return n < 10 ? "0" + n : "" + n; }
 
-  MARGAM.forEach(function () {
-    var s = document.createElement("span");
-    liveProg.appendChild(s);
-  });
-  var dots = liveProg.querySelectorAll("span");
+  liveList.innerHTML = LIVE_PROGRAM.map(function (p, k) {
+    return '<li class="live-row up" data-k="' + k + '">' +
+        '<span class="ix">' + lpad(k + 1) + '</span>' +
+        '<span class="ic"></span>' +
+        '<span class="nm">' + p.title + '</span>' +
+      '</li>';
+  }).join("");
+  var liveRows = liveList.querySelectorAll(".live-row");
 
-  var idx = 0;
-  var demoInterval = null;
+  var LIVE_ICON_DONE = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+  var LIVE_ICON_UP   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>';
+  var LIVE_ICON_CUR  = '<span class="live-dot-green"></span>';
 
-  function renderLive() {
-    var s = steps[idx];
-    [liveNow, liveTitle, liveMeta].forEach(function (el) { el.style.opacity = "0"; });
+  function renderLiveState(s) {
+    var i = (s && typeof s.i === "number") ? s.i : -1;
+    var mode = (s && s.mode) || "before";
+
+    [liveNow, liveTitle, liveMeta, liveBlurb].forEach(function (el) { el.style.opacity = "0"; });
     setTimeout(function () {
-      liveNow.textContent   = s.now;
-      liveTitle.textContent = s.title;
-      liveMeta.textContent  = s.meta;
-      [liveNow, liveTitle, liveMeta].forEach(function (el) {
-        el.style.transition = "opacity .5s";
-        el.style.opacity    = "1";
-      });
-      dots.forEach(function (d, i) {
-        d.classList.remove("cur", "done");
-        if (idx - 1 > i)       d.classList.add("done");
-        else if (idx - 1 === i) d.classList.add("cur");
-      });
-      if (idx > MARGAM.length) dots.forEach(function (d) { d.classList.add("done"); d.classList.remove("cur"); });
-    }, 220);
-    idx = (idx + 1) % steps.length;
+      if (mode === "live" && LIVE_PROGRAM[i]) {
+        liveBadge.classList.remove("hidden");
+        liveNow.textContent   = "Now performing · " + lpad(i + 1);
+        liveTitle.innerHTML   = LIVE_PROGRAM[i].title;
+        liveMeta.innerHTML    = LIVE_PROGRAM[i].meta;
+        liveBlurb.textContent = LIVE_PROGRAM[i].blurb;
+      } else if (mode === "interval") {
+        liveBadge.classList.add("hidden");
+        liveNow.textContent = "Intermission";
+        liveTitle.textContent = "Interval";
+        liveMeta.textContent = "The recital will resume shortly";
+        liveBlurb.textContent = "";
+      } else if (mode === "after") {
+        liveBadge.classList.add("hidden");
+        liveNow.textContent = "Thank you";
+        liveTitle.innerHTML = "Śubhamastu";
+        liveMeta.textContent = "With gratitude to all who joined us this evening";
+        liveBlurb.textContent = "";
+      } else {
+        liveBadge.classList.add("hidden");
+        liveNow.textContent = "Welcome";
+        liveTitle.textContent = "The recital will begin shortly";
+        liveMeta.innerHTML = "Please be seated &middot; phones on silent";
+        liveBlurb.textContent = "";
+      }
+      [liveNow, liveTitle, liveMeta, liveBlurb].forEach(function (el) { el.style.transition = "opacity .5s"; el.style.opacity = "1"; });
+    }, 200);
+
+    liveRows.forEach(function (row, k) {
+      row.classList.remove("done", "cur", "up");
+      var ic = row.querySelector(".ic");
+      var status;
+      if (mode === "after") status = "done";
+      else if (mode === "live" && k === i) status = "cur";
+      else if (k < i || (mode === "interval" && k <= i)) status = "done";
+      else status = "up";
+      row.classList.add(status);
+      ic.innerHTML = status === "cur" ? LIVE_ICON_CUR : (status === "done" ? LIVE_ICON_DONE : LIVE_ICON_UP);
+    });
   }
 
-  renderLive();
-  var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!reducedMotion) { demoInterval = setInterval(renderLive, 4200); }
+  LiveSync.subscribe(renderLiveState);
+  /* (Firebase wiring is inside LiveSync above.) */
 
   /* ============================================================
      DOC CARD NUDGE
@@ -2112,37 +2357,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
     tick(true);
     setInterval(tick, 3000);
   })();
-
-  /* ============================================================
-     FIREBASE LIVE INTEGRATION
-     ============================================================ */
-  try {
-    var firebaseConfig = {
-      databaseURL: "https://my-arangetram-default-rtdb.asia-southeast1.firebasedatabase.app/"
-    };
-    if (!firebase.apps || !firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    var db = firebase.database();
-    db.ref("current_sentence").on("value", function (snap) {
-      var val = snap.val();
-      if (val) {
-        if (demoInterval) { clearInterval(demoInterval); demoInterval = null; }
-        [liveNow, liveTitle, liveMeta].forEach(function (el) { el.style.opacity = "0"; });
-        setTimeout(function () {
-          liveNow.textContent   = "Now on stage";
-          liveTitle.textContent = val;
-          liveMeta.textContent  = "";
-          [liveNow, liveTitle, liveMeta].forEach(function (el) {
-            el.style.transition = "opacity .5s";
-            el.style.opacity    = "1";
-          });
-        }, 220);
-      }
-    });
-  } catch (e) {
-    // Firebase not yet configured
-  }
 
 })();
 </script>

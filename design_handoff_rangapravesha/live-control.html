@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#2c0810" />
+<title>Live Control · Saanvi's Arangetram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Cormorant+SC:wght@600;700&display=swap" rel="stylesheet" />
+<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database-compat.js"></script>
+<style>
+  :root {
+    --bg: #1c0a10; --bg2: #2a131a; --line: #4a2530;
+    --ink: #f1ddc4; --ink-soft: #c8a98f;
+    --maroon: #7e1628; --gold: #d9b25f; --gold-soft: #e3bd6a; --green: #43c172; --red: #e0563f;
+    --font-name: "Cinzel", serif; --font-disp: "Cormorant Garamond", Georgia, serif; --font-label: "Cormorant SC", serif;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-disp); }
+  body { max-width: 560px; margin: 0 auto; min-height: 100vh; padding: 0 16px 150px; }
+
+  /* PIN gate */
+  .gate { position: fixed; inset: 0; background: var(--bg); z-index: 50; display: grid; place-items: center; padding: 24px; }
+  .gate-card { text-align: center; width: 100%; max-width: 320px; }
+  .gate h1 { font-family: var(--font-name); font-size: 20px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-soft); margin: 0 0 6px; }
+  .gate p { color: var(--ink-soft); font-style: italic; font-size: 17px; margin: 0 0 22px; }
+  .pin-in { width: 100%; text-align: center; font-size: 26px; letter-spacing: .4em; font-family: var(--font-name); color: var(--ink); background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .pin-in:focus { outline: none; border-color: var(--gold); }
+  .gate-err { color: var(--red); font-size: 15px; min-height: 20px; margin-top: 10px; }
+
+  header.bar { position: sticky; top: 0; background: linear-gradient(var(--bg) 70%, rgba(28,10,16,0)); padding: 16px 2px 12px; z-index: 5; }
+  .brand { font-family: var(--font-name); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold-soft); }
+  .brand small { display: block; font-family: var(--font-label); font-size: 11px; letter-spacing: .2em; color: var(--ink-soft); margin-top: 3px; }
+  .nowbox { margin-top: 12px; background: var(--bg2); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .nowbox .lab { font-family: var(--font-label); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+  .nowbox .val { font-size: 23px; font-weight: 600; color: #fff; margin-top: 2px; line-height: 1.15; }
+  .nowbox .conn { float: right; font-family: var(--font-label); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+  .nowbox .conn b { color: var(--green); }
+  .nowbox .conn.demo b { color: var(--gold); }
+
+  .list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .row { display: flex; align-items: center; gap: 13px; width: 100%; text-align: left;
+    background: var(--bg2); border: 1px solid var(--line); border-radius: 13px; padding: 14px 14px; cursor: pointer;
+    color: var(--ink); font-family: var(--font-disp); transition: border-color .2s, background .2s, transform .06s; }
+  .row:active { transform: scale(.99); }
+  .row .ix { font-family: var(--font-label); font-size: 13px; letter-spacing: .08em; color: var(--gold); opacity: .6; min-width: 2em; }
+  .row .nm { font-size: 19px; flex: 1; }
+  .row .sub { display: block; font-size: 13px; font-style: italic; color: var(--ink-soft); margin-top: 1px; }
+  .row .st { width: 22px; flex: none; display: grid; place-items: center; color: var(--ink-soft); }
+  .row.done { opacity: .72; }
+  .row.done .st { color: var(--gold); }
+  .row.cur { border-color: var(--green); background: rgba(67,193,114,.12); }
+  .row.cur .nm { color: #fff; font-weight: 600; }
+  .dotG { width: 11px; height: 11px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(67,193,114,.6); animation: pg 1.7s infinite; }
+  @keyframes pg { 0%{box-shadow:0 0 0 0 rgba(67,193,114,.5);} 70%{box-shadow:0 0 0 9px rgba(67,193,114,0);} 100%{box-shadow:0 0 0 0 rgba(67,193,114,0);} }
+
+  .seg { display: flex; gap: 8px; margin-top: 16px; }
+  .seg button { flex: 1; background: none; border: 1px solid var(--line); color: var(--ink-soft); border-radius: 11px; padding: 12px 6px; font-family: var(--font-label); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+  .seg button:active { background: var(--bg2); }
+
+  .footbar { position: fixed; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(28,10,16,0), var(--bg) 28%); padding: 16px; }
+  .footbar .inner { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; }
+  .fbtn { flex: 1; border: 0; border-radius: 14px; padding: 17px 8px; font-family: var(--font-label); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
+  .fbtn:active { transform: scale(.98); }
+  .fbtn.prev { background: var(--bg2); color: var(--ink); border: 1px solid var(--line); flex: 0 0 96px; }
+  .fbtn.next { background: var(--gold); color: #2c0810; }
+
+  .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); opacity: 0;
+    background: #111; border: 1px solid var(--gold); color: var(--gold-soft); padding: 11px 18px; border-radius: 999px;
+    font-family: var(--font-label); font-size: 14px; letter-spacing: .1em; text-transform: uppercase; pointer-events: none;
+    transition: opacity .25s, transform .25s; z-index: 20; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <h1>Live Control</h1>
+    <p>Saanvi&rsquo;s Arangetram</p>
+    <input class="pin-in" id="pinIn" type="tel" inputmode="numeric" maxlength="8" placeholder="PIN" aria-label="Enter PIN" />
+    <div class="gate-err" id="pinErr"></div>
+  </div>
+</div>
+
+<header class="bar">
+  <div class="brand">Live Control <small>Tap a piece to put it on stage</small></div>
+  <div class="nowbox">
+    <span class="conn" id="conn">&hellip;</span>
+    <div class="lab">On stage now</div>
+    <div class="val" id="nowVal">Not started</div>
+  </div>
+</header>
+
+<div class="list" id="list"></div>
+
+<div class="seg">
+  <button id="btnStart">Start</button>
+  <button id="btnInterval">Interval</button>
+  <button id="btnConclude">Conclude</button>
+  <button id="btnReset">Reset</button>
+</div>
+
+<div class="footbar">
+  <div class="inner">
+    <button class="fbtn prev" id="btnPrev">&#9664; Prev</button>
+    <button class="fbtn next" id="btnNext">Next &#9654;</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ====== change this PIN before the event ====== */
+  var CONTROL_PIN = "2026";
+
+  var PROGRAM = [
+    { title: "Pushpanjali & Shloka",        sub: "Opening Invocation" },
+    { title: "Gaiye Ganapathi Jagvandan",   sub: "Devotional" },
+    { title: "Nada Tanumanisham Shankaram", sub: "Invocation" },
+    { title: "Tumak Chalat Ramachandra",    sub: "Bhajan" },
+    { title: "Maathe Malayadwaja",          sub: "Daru Varna" },
+    { title: "Pavadisu Paramatmane",        sub: "Devotional" },
+    { title: "Thiruppavai · Pasuram 24",    sub: "Padam" },
+    { title: "Thiruppavai · Pasuram 30",    sub: "Padam" },
+    { title: "Kalinga Narthana Thillana",   sub: "Thillana" },
+    { title: "Mangalam · Achyutam Keshavam", sub: "Closing Mangalam" }
+  ];
+
+  /* ---- shared sync engine (same path as the public page) ---- */
+  var LiveSync = (function () {
+    var PATH = "live_state";
+    var DEFAULT = { i: -1, mode: "before", t: 0 };
+    var KEY = "arangetram_live_state";
+    var cbs = [], cur = DEFAULT, ref = null, bc = null, isFb = false;
+    function emit() { cbs.forEach(function (cb) { try { cb(cur); } catch (e) {} }); }
+    function startFirebase() {
+      try {
+        var cfg = { databaseURL: "https://my-arangetram-default-rtdb.asia-southeast1.firebasedatabase.app/" };
+        if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(cfg);
+        ref = firebase.database().ref(PATH);
+        ref.on("value", function (snap) { var v = snap.val(); cur = v || DEFAULT; emit(); });
+        isFb = true; return true;
+      } catch (e) { return false; }
+    }
+    function startDemo() {
+      try { var r = localStorage.getItem(KEY); if (r) cur = JSON.parse(r); } catch (e) {}
+      if ("BroadcastChannel" in window) { bc = new BroadcastChannel("arangetram_live"); bc.onmessage = function (ev) { cur = ev.data; emit(); }; }
+      window.addEventListener("storage", function (e) { if (e.key === KEY && e.newValue) { try { cur = JSON.parse(e.newValue); emit(); } catch (_) {} } });
+    }
+    if (typeof firebase === "undefined" || !startFirebase()) startDemo();
+    return {
+      isFirebase: function () { return isFb; },
+      subscribe: function (cb) { cbs.push(cb); cb(cur); return function () {}; },
+      set: function (s) { s.t = Date.now(); cur = s; if (ref) { ref.set(s); } else { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} if (bc) bc.postMessage(s); emit(); } },
+      getState: function () { return cur; }
+    };
+  })();
+
+  var listEl = document.getElementById("list");
+  var nowVal = document.getElementById("nowVal");
+  var connEl = document.getElementById("conn");
+  var toastEl = document.getElementById("toast");
+
+  connEl.innerHTML = LiveSync.isFirebase()
+    ? 'Synced &middot; <b>live</b>'
+    : '<span class="demo">Demo &middot; <b>this device</b></span>';
+  if (!LiveSync.isFirebase()) connEl.className = "conn demo";
+
+  var ICON_DONE = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+  var ICON_UP   = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>';
+  var ICON_CUR  = '<span class="dotG"></span>';
+
+  function lpad(n) { return n < 10 ? "0" + n : "" + n; }
+
+  listEl.innerHTML = PROGRAM.map(function (p, k) {
+    return '<button class="row up" data-k="' + k + '">' +
+        '<span class="ix">' + lpad(k + 1) + '</span>' +
+        '<span class="nm">' + p.title + '<span class="sub">' + p.sub + '</span></span>' +
+        '<span class="st"></span>' +
+      '</button>';
+  }).join("");
+  var rows = listEl.querySelectorAll(".row");
+
+  function setLive(i) {
+    i = Math.max(0, Math.min(PROGRAM.length - 1, i));
+    LiveSync.set({ i: i, mode: "live", t: 0 });
+    toast("On stage: " + PROGRAM[i].title);
+  }
+
+  rows.forEach(function (row) {
+    row.addEventListener("click", function () { setLive(parseInt(row.getAttribute("data-k"), 10)); });
+  });
+
+  document.getElementById("btnNext").addEventListener("click", function () {
+    var s = LiveSync.getState();
+    if (s.mode === "before") setLive(0);
+    else if (s.mode === "interval") setLive((s.i || 0) + 1);
+    else if (s.mode === "live") {
+      if (s.i >= PROGRAM.length - 1) { LiveSync.set({ i: PROGRAM.length, mode: "after", t: 0 }); toast("Recital concluded"); }
+      else setLive(s.i + 1);
+    } else setLive(0);
+  });
+  document.getElementById("btnPrev").addEventListener("click", function () {
+    var s = LiveSync.getState();
+    if (s.mode === "live" && s.i > 0) setLive(s.i - 1);
+    else if (s.mode === "after") setLive(PROGRAM.length - 1);
+    else if (s.mode === "interval") setLive(s.i);
+  });
+  document.getElementById("btnStart").addEventListener("click", function () { setLive(0); });
+  document.getElementById("btnInterval").addEventListener("click", function () {
+    var s = LiveSync.getState();
+    LiveSync.set({ i: (typeof s.i === "number" && s.i >= 0) ? s.i : -1, mode: "interval", t: 0 });
+    toast("Interval");
+  });
+  document.getElementById("btnConclude").addEventListener("click", function () {
+    LiveSync.set({ i: PROGRAM.length, mode: "after", t: 0 }); toast("Recital concluded");
+  });
+  document.getElementById("btnReset").addEventListener("click", function () {
+    LiveSync.set({ i: -1, mode: "before", t: 0 }); toast("Reset to pre-show");
+  });
+
+  var toastT = null;
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove("show"); }, 1800);
+  }
+
+  function render(s) {
+    var i = (s && typeof s.i === "number") ? s.i : -1;
+    var mode = (s && s.mode) || "before";
+    nowVal.textContent =
+      mode === "live" && PROGRAM[i] ? lpad(i + 1) + ". " + PROGRAM[i].title :
+      mode === "interval" ? "Interval" :
+      mode === "after" ? "Concluded — thank you" : "Not started";
+    rows.forEach(function (row, k) {
+      row.classList.remove("done", "cur", "up");
+      var st = row.querySelector(".st");
+      var status = mode === "after" ? "done"
+        : (mode === "live" && k === i) ? "cur"
+        : (k < i || (mode === "interval" && k <= i)) ? "done" : "up";
+      row.classList.add(status);
+      st.innerHTML = status === "cur" ? ICON_CUR : status === "done" ? ICON_DONE : ICON_UP;
+    });
+  }
+  LiveSync.subscribe(render);
+
+  /* ---- PIN gate ---- */
+  var gate = document.getElementById("gate");
+  var pinIn = document.getElementById("pinIn");
+  var pinErr = document.getElementById("pinErr");
+  function unlock() { gate.style.display = "none"; try { sessionStorage.setItem("live_ctrl_ok", "1"); } catch (e) {} }
+  try { if (sessionStorage.getItem("live_ctrl_ok") === "1") gate.style.display = "none"; } catch (e) {}
+  pinIn.addEventListener("input", function () {
+    pinErr.textContent = "";
+    if (pinIn.value === CONTROL_PIN) unlock();
+    else if (pinIn.value.length >= CONTROL_PIN.length) { pinErr.textContent = "Incorrect PIN"; pinIn.value = ""; }
+  });
+  if (gate.style.display !== "none") setTimeout(function () { pinIn.focus(); }, 200);
+})();
+</script>
+</body>
+</html>
