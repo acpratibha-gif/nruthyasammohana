@@ -19,8 +19,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cormorant+SC:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database-compat.js"></script>
 
 <style>
 /* ============================================================
@@ -806,44 +804,6 @@ html.is-dark .film-eyebrow { color: var(--c-gold-soft); }
   .credits-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* ============================================================
-   Live
-   ============================================================ */
-.live {
-  background: radial-gradient(120% 100% at 50% 0%, var(--c-hero-bg-2), var(--c-hero-bg) 70%);
-  color: var(--c-hero-fg);
-}
-.live .section-head h2 { color: #f4e7cf; }
-.live .eyebrow { color: var(--c-hero-gold); }
-.live-card {
-  max-width: 620px; margin: 0 auto; text-align: center;
-  border: 1px solid rgba(227,189,106,.32); border-radius: var(--r-lg);
-  background: rgba(255,255,255,.03); padding: clamp(34px, 5vw, 52px);
-  position: relative;
-}
-.live-badge {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--font-label); letter-spacing: .22em; text-transform: uppercase;
-  font-size: 13px; color: var(--c-hero-gold); font-weight: 600; margin-bottom: 18px;
-}
-.live-dot {
-  width: 10px; height: 10px; border-radius: 50%; background: #e0563f;
-  box-shadow: 0 0 0 0 rgba(224,86,63,.6); animation: livepulse 1.8s infinite;
-}
-@media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
-@keyframes livepulse {
-  0%   { box-shadow: 0 0 0 0   rgba(224,86,63,.6); }
-  70%  { box-shadow: 0 0 0 14px rgba(224,86,63,0); }
-  100% { box-shadow: 0 0 0 0   rgba(224,86,63,0); }
-}
-.live-now   { font-family: var(--font-label); letter-spacing: .2em; text-transform: uppercase; font-size: 13px; color: var(--c-hero-gold); }
-.live-title { font-family: var(--font-display); font-size: clamp(32px, 6vw, 52px); color: #f4e7cf; margin: 8px 0 6px; font-weight: 600; }
-.live-meta  { font-style: italic; color: var(--c-hero-fg); opacity: .85; font-family: var(--font-display); font-size: 20px; }
-.live-hint  { font-size: 14px; color: var(--c-hero-gold); opacity: .7; margin-top: 22px; font-style: italic; }
-.live-progress { display: flex; gap: 6px; justify-content: center; margin-top: 24px; }
-.live-progress span { width: 22px; height: 4px; border-radius: 2px; background: rgba(227,189,106,.25); transition: background .3s; }
-.live-progress span.done { background: var(--c-hero-gold); }
-.live-progress span.cur  { background: #e0563f; }
 
 /* ============================================================
    Team
@@ -933,11 +893,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   .story-body { padding: 14px 16px 18px; }
   .story-body p { font-size: 15px; }
 
-  /* Live section */
-  .live-card { padding: 28px 20px; }
-  .live-meta { font-size: 18px; }
-  .live-progress span { width: 16px; }
-
   /* Team */
   .team-card { padding: 18px; }
   .team-card .name { font-size: 21px; }
@@ -975,10 +930,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
   /* Info cards body text */
   .info-inner p { font-size: 16px; line-height: 1.68; }
   .info-inner .drop { font-size: 17px; }
-
-  /* Live card */
-  .live-card { padding: 24px 18px; }
-  .live-meta { font-size: 17px; }
 
   /* Footer body text */
   .footer .om { font-size: 17px; line-height: 1.65; }
@@ -1097,7 +1048,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       <li><a href="#natanam">Natanam</a></li>
       <li><a href="#journey">Journey</a></li>
       <li><a href="#margam">Margam</a></li>
-      <li><a href="#live">Live</a></li>
       <li><a href="#team">Team</a></li>
       <li><a href="#wishes">Wishes</a></li>
     </ul>
@@ -1134,13 +1084,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
 
     <div class="hero-cta">
       <a class="btn btn-gold" href="#margam">View the Margam</a>
-      <a class="btn btn-outline" href="#live">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/>
-        </svg>
-        Live updates
-      </a>
     </div>
 
     <div class="hero-gallery">
@@ -1288,47 +1231,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
       <p class="section-lead">Nine pieces, in the traditional order &mdash; from invocation to benediction. Tap any piece to read its meaning.</p>
     </div>
     <div class="accordion" id="margam-acc"></div>
-  </div>
-</section>
-
-<!-- ============ LIVE ============ -->
-<style>
-  .live-badge.hidden { display: none; }
-  .live-blurb { font-family: var(--font-display); font-style: italic; font-size: clamp(17px, 2.2vw, 21px); color: var(--c-hero-fg); opacity: .9; margin: 16px auto 0; max-width: 520px; line-height: 1.45; min-height: 1.3em; transition: opacity .5s; }
-  .live-list { list-style: none; margin: 30px auto 0; padding: 24px 4px 4px; max-width: 480px; text-align: left; border-top: 1px solid rgba(227,189,106,.18); display: flex; flex-direction: column; gap: 1px; }
-  .live-row { display: flex; align-items: center; gap: 13px; padding: 10px 10px; border-radius: 11px; transition: background .35s var(--ease); }
-  .live-row .ix { font-family: var(--font-label); font-size: 12px; letter-spacing: .1em; color: var(--c-hero-gold); opacity: .45; min-width: 2em; }
-  .live-row .ic { width: 18px; flex: none; display: grid; place-items: center; color: rgba(227,189,106,.4); }
-  .live-row .nm { font-family: var(--font-display); font-size: 18px; color: var(--c-hero-fg); opacity: .5; transition: opacity .35s, color .35s; }
-  .live-row.done .ic { color: var(--c-hero-gold); }
-  .live-row.done .nm { opacity: .62; }
-  .live-row.cur { background: rgba(224,86,63,.16); }
-  .live-row.cur .ix { opacity: 1; }
-  .live-row.cur .nm { opacity: 1; color: #fff; font-weight: 600; }
-  .live-dot-green { width: 9px; height: 9px; border-radius: 50%; background: #43c172; box-shadow: 0 0 0 0 rgba(67,193,114,.6); animation: lpgreen 1.8s infinite; }
-  @keyframes lpgreen { 0% { box-shadow: 0 0 0 0 rgba(67,193,114,.5); } 70% { box-shadow: 0 0 0 8px rgba(67,193,114,0); } 100% { box-shadow: 0 0 0 0 rgba(67,193,114,0); } }
-</style>
-<section class="section live" id="live">
-  <div class="container">
-    <div class="mudra-divider on-dark">
-      <span class="ln"></span>
-      <span class="mudra" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 16 C44 30 40 44 42 58 C44 70 56 70 58 58 C60 44 56 30 50 16 Z"/><path d="M50 16 L50 40 M44 24 L47 42 M56 24 L53 42"/><path d="M42 58 Q50 66 58 58"/></svg></span>
-      <span class="ln r"></span>
-    </div>
-    <div class="section-head">
-      <p class="eyebrow">On Stage Now</p>
-      <h2>Live</h2>
-      <p class="section-lead" style="color:var(--c-hero-gold);opacity:.85">Updates appear here in real time during the performance.</p>
-    </div>
-    <div class="live-card" id="liveCard">
-      <div class="live-badge hidden" id="liveBadge"><span class="live-dot"></span> Live</div>
-      <div class="live-now"  id="liveNow">Welcome</div>
-      <div class="live-title" id="liveTitle">The recital will begin shortly</div>
-      <div class="live-meta"  id="liveMeta">Please be seated &middot; phones on silent</div>
-      <p class="live-blurb" id="liveBlurb"></p>
-      <ul class="live-list" id="liveList"></ul>
-      <p class="live-hint" id="liveHint">This page updates live &mdash; no need to refresh.</p>
-    </div>
   </div>
 </section>
 
@@ -2152,127 +2054,6 @@ html.is-dark .credits-head h3 { color: var(--c-gold-soft); }
     });
   }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
   revealEls.forEach(function (el) { ro.observe(el); });
-
-  /* ============================================================
-     LIVE FEED — synced via Firebase (Live Control.html)
-     The organiser advances pieces from the phone control panel
-     (Live Control.html); this public page updates instantly for
-     everyone. Falls back to a local cross-tab demo if Firebase is
-     unreachable. State shape: { i: <index|-1>, mode, t }.
-     ============================================================ */
-  var LIVE_PROGRAM = [
-    { title: "Pushpanjali &amp; Shloka",        meta: "Opening Invocation · Ragam Nattai · Adi",        blurb: "An offering of flowers to the gods, the guru, and the audience — the dancer's reverent salutation that opens the recital." },
-    { title: "Gaiye Ganapathi Jagvandan",       meta: "Devotional · Ragam Yaman · Aadi",               blurb: "A joyful invocation of Lord Ganesha, remover of obstacles — a bhajan by Sant Tulsidas." },
-    { title: "Nada Tanumanisham Shankaram",     meta: "Invocation · Ragam Chittaranjani · Aadi",       blurb: "Thyagaraja's hymn to Shiva as the very embodiment of Nada — sacred sound itself." },
-    { title: "Tumak Chalat Ramachandra",        meta: "Bhajan · Mishra Peelu · Tishra Ekam",          blurb: "Tulsidas's tender vision of the child Rama toddling on little feet, gathered lovingly into his mother's arms." },
-    { title: "Maathe Malayadwaja",              meta: "Daru Varna · Raga Kamas · Aadi",                blurb: "The centrepiece — a Daru Varna to Meenakshi, daughter of King Malayadhvaja, revealing the goddess in all her facets." },
-    { title: "Pavadisu Paramatmane",            meta: "Devotional · Ragamalika · Adi",                 blurb: "Purandara Dasa's plea to the Supreme, woven with the story of Hathiram Baba's devotion to Lord Venkateshwara." },
-    { title: "Thiruppavai · Pasuram 24",       meta: "Padam · Sindhubhairavi · Aadi · Andal",      blurb: "Andal's 'Potri' — a garland of praise to the Lord as Vamana, Rama, and Krishna." },
-    { title: "Thiruppavai · Pasuram 30",       meta: "Padam · Madhyamavati · Mishra Chapu",          blurb: "'Vanga Kadal' — Andal's concluding verse, sealing the sacred vow of the Thiruppavai." },
-    { title: "Kalinga Narthana Thillana",       meta: "Thillana · Gambheera Nata · Aadi",              blurb: "The rhythmic finale — Krishna dances in triumph upon the serpent Kalinga." },
-    { title: "Mangalam · Achyutam Keshavam",    meta: "Closing Mangalam · Yaman Kalyani · Adi",        blurb: "The closing benediction — a prayer of auspiciousness to conclude the recital." }
-  ];
-
-  var LiveSync = (function () {
-    var PATH = "live_state";
-    var DEFAULT = { i: -1, mode: "before", t: 0 };
-    var KEY = "arangetram_live_state";
-    var cbs = [], cur = DEFAULT, ref = null, bc = null;
-    function emit() { cbs.forEach(function (cb) { try { cb(cur); } catch (e) {} }); }
-    function startFirebase() {
-      try {
-        var cfg = { databaseURL: "https://my-arangetram-default-rtdb.asia-southeast1.firebasedatabase.app/" };
-        if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(cfg);
-        ref = firebase.database().ref(PATH);
-        ref.on("value", function (snap) { var v = snap.val(); cur = v || DEFAULT; emit(); });
-        return true;
-      } catch (e) { return false; }
-    }
-    function startDemo() {
-      try { var r = localStorage.getItem(KEY); if (r) cur = JSON.parse(r); } catch (e) {}
-      if ("BroadcastChannel" in window) { bc = new BroadcastChannel("arangetram_live"); bc.onmessage = function (ev) { cur = ev.data; emit(); }; }
-      window.addEventListener("storage", function (e) { if (e.key === KEY && e.newValue) { try { cur = JSON.parse(e.newValue); emit(); } catch (_) {} } });
-    }
-    if (typeof firebase === "undefined" || !startFirebase()) startDemo();
-    return {
-      subscribe: function (cb) { cbs.push(cb); cb(cur); return function () { cbs = cbs.filter(function (x) { return x !== cb; }); }; },
-      set: function (s) { s.t = Date.now(); cur = s; if (ref) { ref.set(s); } else { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} if (bc) bc.postMessage(s); emit(); } },
-      getState: function () { return cur; }
-    };
-  })();
-  window.LiveSync = LiveSync;
-
-  var liveBadge = document.getElementById("liveBadge");
-  var liveNow   = document.getElementById("liveNow");
-  var liveTitle = document.getElementById("liveTitle");
-  var liveMeta  = document.getElementById("liveMeta");
-  var liveBlurb = document.getElementById("liveBlurb");
-  var liveList  = document.getElementById("liveList");
-
-  function lpad(n) { return n < 10 ? "0" + n : "" + n; }
-
-  liveList.innerHTML = LIVE_PROGRAM.map(function (p, k) {
-    return '<li class="live-row up" data-k="' + k + '">' +
-        '<span class="ix">' + lpad(k + 1) + '</span>' +
-        '<span class="ic"></span>' +
-        '<span class="nm">' + p.title + '</span>' +
-      '</li>';
-  }).join("");
-  var liveRows = liveList.querySelectorAll(".live-row");
-
-  var LIVE_ICON_DONE = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
-  var LIVE_ICON_UP   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>';
-  var LIVE_ICON_CUR  = '<span class="live-dot-green"></span>';
-
-  function renderLiveState(s) {
-    var i = (s && typeof s.i === "number") ? s.i : -1;
-    var mode = (s && s.mode) || "before";
-
-    [liveNow, liveTitle, liveMeta, liveBlurb].forEach(function (el) { el.style.opacity = "0"; });
-    setTimeout(function () {
-      if (mode === "live" && LIVE_PROGRAM[i]) {
-        liveBadge.classList.remove("hidden");
-        liveNow.textContent   = "Now performing · " + lpad(i + 1);
-        liveTitle.innerHTML   = LIVE_PROGRAM[i].title;
-        liveMeta.innerHTML    = LIVE_PROGRAM[i].meta;
-        liveBlurb.textContent = LIVE_PROGRAM[i].blurb;
-      } else if (mode === "interval") {
-        liveBadge.classList.add("hidden");
-        liveNow.textContent = "Intermission";
-        liveTitle.textContent = "Interval";
-        liveMeta.textContent = "The recital will resume shortly";
-        liveBlurb.textContent = "";
-      } else if (mode === "after") {
-        liveBadge.classList.add("hidden");
-        liveNow.textContent = "Thank you";
-        liveTitle.innerHTML = "Śubhamastu";
-        liveMeta.textContent = "With gratitude to all who joined us this evening";
-        liveBlurb.textContent = "";
-      } else {
-        liveBadge.classList.add("hidden");
-        liveNow.textContent = "Welcome";
-        liveTitle.textContent = "The recital will begin shortly";
-        liveMeta.innerHTML = "Please be seated &middot; phones on silent";
-        liveBlurb.textContent = "";
-      }
-      [liveNow, liveTitle, liveMeta, liveBlurb].forEach(function (el) { el.style.transition = "opacity .5s"; el.style.opacity = "1"; });
-    }, 200);
-
-    liveRows.forEach(function (row, k) {
-      row.classList.remove("done", "cur", "up");
-      var ic = row.querySelector(".ic");
-      var status;
-      if (mode === "after") status = "done";
-      else if (mode === "live" && k === i) status = "cur";
-      else if (k < i || (mode === "interval" && k <= i)) status = "done";
-      else status = "up";
-      row.classList.add(status);
-      ic.innerHTML = status === "cur" ? LIVE_ICON_CUR : (status === "done" ? LIVE_ICON_DONE : LIVE_ICON_UP);
-    });
-  }
-
-  LiveSync.subscribe(renderLiveState);
-  /* (Firebase wiring is inside LiveSync above.) */
 
   /* ============================================================
      DOC CARD NUDGE
